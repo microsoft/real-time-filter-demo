@@ -1,0 +1,99 @@
+Real-time Filter Demo
+=====================
+
+The example has been developed with XAML for Windows Phone devices and is tested
+to work on Nokia Lumia devices with Windows Phone 8.
+
+This example application is hosted in Nokia Developer Projects:
+- http://projects.developer.nokia.com/<todo>
+
+For more information on implementation visit the wiki pages:
+- http://projects.developer.nokia.com/<tod>/wiki
+
+
+1. Prerequisites
+-------------------------------------------------------------------------------
+
+- C# basics
+- Windows 8
+- Microsoft Visual Studio Express for Windows Phone 2012
+
+
+2. Project structure and implementation
+-------------------------------------------------------------------------------
+
+2.1 Important files and classes
+-------------------------------
+
+| Class/File                     | Description                                |
+|--------------------------------|--------------------------------------------|
+|                                |                                            |
+|                                |                                            |
+|--------------------------------|--------------------------------------------|
+|                                |                                            |
+|                                |                                            |
+|--------------------------------|--------------------------------------------|
+
+
+2.2 Used APIs/Windows Phone Components
+--------------------------------------
+
+
+
+3. Compatibility
+-------------------------------------------------------------------------------
+
+Windows Phone 8. Tested to work on Nokia Lumia 920 and Nokia Lumia 520.
+Developed with Microsoft Visual Studio Express for Windows Phone 2012.
+
+3.1 Required Capabilities
+-------------------------
+
+ID_CAP_ISV_CAMERA
+ID_CAP_MEDIALIB_AUDIO
+ID_CAP_MEDIALIB_PLAYBACK
+
+3.2 Known Issues
+----------------
+
+None.
+
+
+4. Building, installing, and running the application
+-------------------------------------------------------------------------------
+
+4.1 Preparations
+----------------
+
+Make sure you have the following installed:
+ * Windows 8
+ * Windows Phone SDK 8.0
+
+4.2 Using the WINDOWS PHONE 8 SDK
+---------------------------------
+
+1. Open the SLN file:
+   File > Open Project, select the solution (.sln postfix) file
+2. Select the target 'Emulator WXGA'.
+3. Press F5 to build the project and run it on the Windows Phone Emulator.
+
+4.3 Deploying to Windows Phone 8
+--------------------------------
+
+Please see official documentation for deploying and testing applications on
+Windows Phone devices:
+http://msdn.microsoft.com/en-us/library/gg588378%28v=vs.92%29.aspx
+
+
+5. License
+-------------------------------------------------------------------------------
+
+See the license text file delivered with this project. The license file is also
+available online at
+http://projects.developer.nokia.com/<todo>/browser/trunk/Licence.txt
+
+
+6. Version history
+-------------------------------------------------------------------------------
+
+1.0.0.0 First release
