@@ -225,7 +225,11 @@ namespace RealtimeFilterDemo
         {
             Debug.WriteLine("MainPage.OnNavigatedFrom()");
             MyCameraMediaElement.Source = null;
-            source.FPSChanged -= OnFPSChanged;
+
+            if (isLoaded)
+            {
+                source.FPSChanged -= OnFPSChanged;
+            }
         }
 
         /// <summary>
@@ -283,7 +287,8 @@ namespace RealtimeFilterDemo
         /// <param name="e"></param>
         private void OnFPSChanged(object sender, int e)
         {
-            FPSTextBlock.Text = "FPS: " + e;
+            // Uncomment the following to display the frame rate on the screen
+            //FPSTextBlock.Text = "FPS: " + e;
         }
     }
 }

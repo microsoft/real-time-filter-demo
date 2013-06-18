@@ -49,7 +49,7 @@
                 Margin="0,0,12,0"
                 HorizontalAlignment="Right"
                 VerticalAlignment="Bottom"
-                Text="Waiting for FPS count..."
+                Text=""
                 />            
         </Grid>
    </Grid>

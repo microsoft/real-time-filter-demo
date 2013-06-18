@@ -51,7 +51,7 @@
                 Grid.Row="1"
                 TextWrapping="Wrap"
                 FontSize="{StaticResource PhoneFontSizeMedium}"
-                Text="This is a Nokia example application demonstrating the use of effects provided by the Nokia Image Editing SDK. The effects are applies to the stream of images received from the camera device. The app supports no photo capturing. Find the latest revision of this example and more at: "
+                Text="This is a Nokia example application demonstrating the use of effects provided by the Nokia Imaging SDK. The effects are applies to the stream of images received from the camera device. The app supports no photo capturing. Find the latest revision of this example and more at: "
                 />
             <HyperlinkButton
                 Grid.Row="2"

@@ -1,10 +1,9 @@
 Real-time Filter Demo
 =====================
 
-A Nokia example application demonstrating the use of the Nokia Image Editing SDK
-for real-time image effects. The effects are applied to the stream received from
-the camera and shown in the viewfinder. This app does not support capturing
-photos. 
+A Nokia example application demonstrating the use of the Nokia Imaging SDK for
+real-time image effects. The effects are applied to the stream received from the
+camera and shown in the viewfinder. This app does not support capturing photos. 
 
 This example application is hosted in Nokia Developer Projects:
 - https://projects.developer.nokia.com/real_time_filter_demo

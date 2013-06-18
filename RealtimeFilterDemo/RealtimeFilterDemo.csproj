@@ -164,14 +164,17 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Nokia.Graphics.Imaging">
-      <HintPath>..\NokiaImageEditingSDK\ARM\Nokia.Graphics.Imaging.winmd</HintPath>
+    <Reference Include="Nokia.Graphics.Imaging, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NokiaImagingSDK\ARM\Nokia.Graphics.Imaging.winmd</HintPath>
     </Reference>
-    <Reference Include="Nokia.Graphics.Imaging.Managed">
-      <HintPath>..\NokiaImageEditingSDK\ARM\Nokia.Graphics.Imaging.Managed.dll</HintPath>
+    <Reference Include="Nokia.Graphics.Imaging.Managed, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NokiaImagingSDK\ARM\Nokia.Graphics.Imaging.Managed.dll</HintPath>
     </Reference>
-    <Reference Include="Nokia.InteropServices.WindowsRuntime">
-      <HintPath>..\NokiaImageEditingSDK\ARM\Nokia.InteropServices.WindowsRuntime.winmd</HintPath>
+    <Reference Include="Nokia.InteropServices.WindowsRuntime, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NokiaImagingSDK\ARM\Nokia.InteropServices.WindowsRuntime.winmd</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
