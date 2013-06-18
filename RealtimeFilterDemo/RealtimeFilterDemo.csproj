@@ -91,7 +91,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CameraStreamSourceDataSingleton.cs" />
-    <Compile Include="NokiaImageEditingSDKEffects.cs" />
+    <Compile Include="NokiaImagingSDKEffects.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>

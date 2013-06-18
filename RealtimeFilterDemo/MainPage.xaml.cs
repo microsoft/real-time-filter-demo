@@ -41,7 +41,7 @@ namespace RealtimeFilterDemo
         {
             InitializeComponent();
             isLoaded = false;
-            cameraEffect = new NokiaImageEditingSDKEffects();
+            cameraEffect = new NokiaImagingSDKEffects();
             BuildApplicationBar();
         }
 
@@ -125,14 +125,14 @@ namespace RealtimeFilterDemo
             }
             
             // Show the index and the name of the current effect
-            if (cameraEffect is NokiaImageEditingSDKEffects)
+            if (cameraEffect is NokiaImagingSDKEffects)
             {
-                NokiaImageEditingSDKEffects effects =
-                    cameraEffect as NokiaImageEditingSDKEffects;
+                NokiaImagingSDKEffects effects =
+                    cameraEffect as NokiaImagingSDKEffects;
 
                 EffectNameTextBlock.Text =
                     (effects.EffectIndex + 1) + "/"
-                    + NokiaImageEditingSDKEffects.NumberOfEffects
+                    + NokiaImagingSDKEffects.NumberOfEffects
                     + ": " + effects.EffectName;
             }
             else
@@ -161,18 +161,18 @@ namespace RealtimeFilterDemo
         private void ChangeEffect(bool next)
         {
             if (cameraEffect == null
-                || !(cameraEffect is NokiaImageEditingSDKEffects))
+                || !(cameraEffect is NokiaImagingSDKEffects))
             {
                 return;
             }
 
-            NokiaImageEditingSDKEffects effects =
-                cameraEffect as NokiaImageEditingSDKEffects;
+            NokiaImagingSDKEffects effects =
+                cameraEffect as NokiaImagingSDKEffects;
 
             if (next)
             {
                 if (effects.EffectIndex
-                    < NokiaImageEditingSDKEffects.NumberOfEffects - 1)
+                    < NokiaImagingSDKEffects.NumberOfEffects - 1)
                 {
                     effects.EffectIndex++;
                 }
@@ -190,13 +190,13 @@ namespace RealtimeFilterDemo
                 else
                 {
                     effects.EffectIndex =
-                        NokiaImageEditingSDKEffects.NumberOfEffects - 1;
+                        NokiaImagingSDKEffects.NumberOfEffects - 1;
                 }
             }
 
             EffectNameTextBlock.Text =
                 (effects.EffectIndex + 1) + "/"
-                + NokiaImageEditingSDKEffects.NumberOfEffects
+                + NokiaImagingSDKEffects.NumberOfEffects
                 + ": " + cameraEffect.EffectName;
         }
 

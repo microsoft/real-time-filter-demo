@@ -23,7 +23,7 @@ namespace RealtimeFilterDemo
     /// <summary>
     /// A concrete implementation of the ICameraEffect.
     /// </summary>
-    public class NokiaImageEditingSDKEffects : ICameraEffect
+    public class NokiaImagingSDKEffects : ICameraEffect
     {
         // Constants
         public static readonly int NumberOfEffects = 6;
