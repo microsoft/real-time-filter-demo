@@ -19,7 +19,7 @@
     </SupportedCultures>
     <XapOutputs>true</XapOutputs>
     <GenerateSilverlightManifest>true</GenerateSilverlightManifest>
-    <XapFilename>RealtimeFilterDemo_Debug_x86.xap</XapFilename>
+    <XapFilename>RealtimeFilterDemo.xap</XapFilename>
     <SilverlightManifestTemplate>Properties\AppManifest.xml</SilverlightManifestTemplate>
     <SilverlightAppEntry>RealtimeFilterDemo.App</SilverlightAppEntry>
     <ValidateXaml>true</ValidateXaml>

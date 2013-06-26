@@ -105,4 +105,5 @@ https://projects.developer.nokia.com/real_time_filter_demo/browser/real_time_fil
 6. Version history
 -------------------------------------------------------------------------------
 
+1.0 First public release
 0.8 First release candidate

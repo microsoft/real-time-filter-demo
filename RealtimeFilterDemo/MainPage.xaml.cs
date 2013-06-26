@@ -6,14 +6,18 @@ namespace RealtimeFilterDemo
 {
     using Microsoft.Phone.Controls;
     using Microsoft.Phone.Shell;
+
     using System;
     using System.Diagnostics;
     using System.Linq;
+    using System.Windows;
+    using System.Windows.Media.Animation;
     using System.Windows.Navigation;
+
     using Windows.Phone.Media.Capture;
     using Size = Windows.Foundation.Size;
+
     using RealtimeFilterDemo.Resources;
-    using System.Windows.Media.Animation;
 
     /// <summary>
     /// The application main page.
@@ -24,9 +28,9 @@ namespace RealtimeFilterDemo
         private const String BackIconUri = "/Assets/Icons/back.png";
         private const String NextIconUri = "/Assets/Icons/next.png";
         private const String AboutPageUri = "/AboutPage.xaml";
+        private const double AspectRatio = 4.0 / 3.0;
         private const double MediaElementWidth = 640;
         private const double MediaElementHeight = 480;
-        private const double AspectRatio = 4.0 / 3.0;
 
         // Members
         private PhotoCaptureDevice camera;
