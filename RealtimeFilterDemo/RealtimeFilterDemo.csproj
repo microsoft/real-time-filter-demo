@@ -26,27 +26,6 @@
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>Bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
-    <NoStdLib>true</NoStdLib>
-    <NoConfig>true</NoConfig>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>Bin\Release</OutputPath>
-    <DefineConstants>TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
-    <NoStdLib>true</NoStdLib>
-    <NoConfig>true</NoConfig>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
@@ -164,17 +143,14 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Nokia.Graphics.Imaging, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NokiaImagingSDK\ARM\Nokia.Graphics.Imaging.winmd</HintPath>
+    <Reference Include="Nokia.Graphics.Imaging">
+      <HintPath>..\NokiaImagingSDK\$(Platform)\Nokia.Graphics.Imaging.winmd</HintPath>
     </Reference>
-    <Reference Include="Nokia.Graphics.Imaging.Managed, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NokiaImagingSDK\ARM\Nokia.Graphics.Imaging.Managed.dll</HintPath>
+    <Reference Include="Nokia.Graphics.Imaging.Managed">
+      <HintPath>..\NokiaImagingSDK\$(Platform)\Nokia.Graphics.Imaging.Managed.dll</HintPath>
     </Reference>
-    <Reference Include="Nokia.InteropServices.WindowsRuntime, Version=255.255.255.255, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\NokiaImagingSDK\ARM\Nokia.InteropServices.WindowsRuntime.winmd</HintPath>
+    <Reference Include="Nokia.InteropServices.WindowsRuntime">
+      <HintPath>..\NokiaImagingSDK\$(Platform)\Nokia.InteropServices.WindowsRuntime.winmd</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
