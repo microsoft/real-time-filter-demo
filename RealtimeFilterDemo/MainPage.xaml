@@ -22,12 +22,7 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid Grid.Row="1" Margin="8">
-            <Grid x:Name="MediaElementContainer" Margin="0"></Grid>
-            <!--<MediaElement
-                x:Name="MyCameraMediaElement"
-                Stretch="UniformToFill" 
-                BufferingTime="0"
-                Tap="OnMyCameraMediaElementTapped"/>-->
+            <Grid x:Name="MediaElementContainer" Margin="0" />
             <StackPanel
                 x:Name="TitlePanel"
                 Grid.Row="0"
