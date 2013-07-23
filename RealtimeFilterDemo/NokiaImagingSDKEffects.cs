@@ -57,8 +57,12 @@ namespace RealtimeFilterDemo
             set
             {
                 captureDevice = value;
-                Windows.Foundation.Size previewSize = captureDevice.PreviewResolution;
-                cameraBitmap = new WriteableBitmap((int)previewSize.Width, (int)previewSize.Height);
+
+                if (captureDevice != null)
+                {
+                    Windows.Foundation.Size previewSize = captureDevice.PreviewResolution;
+                    cameraBitmap = new WriteableBitmap((int)previewSize.Width, (int)previewSize.Height);
+                }
             }
         }
 
@@ -72,6 +76,11 @@ namespace RealtimeFilterDemo
 
         public async Task GetNewFrameAndApplyEffect(IBuffer processedBuffer)
         {
+            if (captureDevice == null)
+            {
+                return;
+            }
+
             captureDevice.GetPreviewBufferArgb(cameraBitmap.Pixels);
 
             Bitmap outputBtm = new Bitmap(

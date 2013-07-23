@@ -156,7 +156,6 @@ namespace RealtimeFilterDemo
         /// <param name="e"></param>
         private void Fps_Tick(object sender, EventArgs e)
         {
-            Debug.WriteLine("FPS: " + frameCount);
             EventHandler<int> handler = FPSChanged;
 
             if (handler != null)

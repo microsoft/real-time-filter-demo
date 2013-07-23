@@ -11,6 +11,8 @@ namespace RealtimeFilterDemo
     using System.Diagnostics;
     using System.Linq;
     using System.Windows;
+    using System.Windows.Controls;
+    using System.Windows.Media;
     using System.Windows.Media.Animation;
     using System.Windows.Navigation;
 
@@ -36,7 +38,7 @@ namespace RealtimeFilterDemo
         private PhotoCaptureDevice camera;
         private readonly ICameraEffect cameraEffect;
         private CameraStreamSource source;
-        private Boolean isLoaded;
+        private MediaElement mediaElement;
 
         /// <summary>
         /// Constructor.
@@ -44,7 +46,6 @@ namespace RealtimeFilterDemo
         public MainPage()
         {
             InitializeComponent();
-            isLoaded = false;
             cameraEffect = new NokiaImagingSDKEffects();
             BuildApplicationBar();
         }
@@ -72,8 +73,6 @@ namespace RealtimeFilterDemo
             menuItem.Text = AppResources.AboutPageButtonText;
             menuItem.Click += OnAboutPageButtonClicked;
             ApplicationBar.MenuItems.Add(menuItem);
-
-            Loaded += MainPage_Loaded;
         }
 
         /// <summary>
@@ -83,6 +82,7 @@ namespace RealtimeFilterDemo
         /// </summary>
         private async void Initialize()
         {
+            Debug.WriteLine("MainPage.Initialize()");
             Size mediaElementSize = new Size(MediaElementWidth, MediaElementHeight);
 
             if (camera == null)
@@ -120,11 +120,15 @@ namespace RealtimeFilterDemo
                 cameraEffect.CaptureDevice = camera;
             }
 
-            if (MyCameraMediaElement.Source == null)
+            if (mediaElement == null)
             {
-                // Always create a new source, otherwise the MediaElement will not start
+                mediaElement = new MediaElement();
+                mediaElement.Stretch = Stretch.UniformToFill;
+                mediaElement.BufferingTime = new TimeSpan(0);
+                mediaElement.Tap += OnMyCameraMediaElementTapped;
                 source = new CameraStreamSource(cameraEffect, mediaElementSize);
-                MyCameraMediaElement.SetSource(source);
+                mediaElement.SetSource(source);
+                MediaElementContainer.Children.Add(mediaElement);
                 source.FPSChanged += OnFPSChanged;
             }
             
@@ -143,18 +147,6 @@ namespace RealtimeFilterDemo
             {
                 EffectNameTextBlock.Text = cameraEffect.EffectName;
             }
-        }
-
-        /// <summary>
-        /// Initialises the camera and the camera stream.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void MainPage_Loaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-            Debug.WriteLine("MainPage.MainPage_Loaded()");
-            Initialize();
-            isLoaded = true;
         }
 
         /// <summary>
@@ -211,12 +203,8 @@ namespace RealtimeFilterDemo
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             Debug.WriteLine("MainPage.OnNavigatedTo()");
+            Initialize();
             base.OnNavigatedTo(e);
-
-            if (isLoaded)
-            {
-                Initialize();
-            }
         }
 
         /// <summary>
@@ -228,12 +216,16 @@ namespace RealtimeFilterDemo
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             Debug.WriteLine("MainPage.OnNavigatedFrom()");
-            MyCameraMediaElement.Source = null;
+            MediaElementContainer.Children.Remove(mediaElement);
+            mediaElement = null;
 
-            if (isLoaded)
+            if (camera != null)
             {
-                source.FPSChanged -= OnFPSChanged;
+                camera.Dispose();
+                camera = null;
             }
+
+            source.FPSChanged -= OnFPSChanged;
         }
 
         /// <summary>
@@ -250,7 +242,6 @@ namespace RealtimeFilterDemo
                 return;
             }
 
-            MyCameraMediaElement.Source = null;
             NavigationService.Navigate(new Uri(AboutPageUri, UriKind.Relative));
         }
 
