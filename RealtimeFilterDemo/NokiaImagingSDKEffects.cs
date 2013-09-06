@@ -29,10 +29,9 @@ namespace RealtimeFilterDemo
         public static readonly int NumberOfEffects = 6;
 
         // Members
-        private PhotoCaptureDevice captureDevice;
-        private WriteableBitmap cameraBitmap;
         private Windows.Foundation.Size outputBufferSize;
         private int effectIndex = 0;
+        private Nokia.Graphics.Imaging.CameraPreviewImageSource _cameraSource;
 
         public String EffectName
         {
@@ -56,65 +55,48 @@ namespace RealtimeFilterDemo
         {
             set
             {
-                captureDevice = value;
-
-                if (captureDevice != null)
-                {
-                    Windows.Foundation.Size previewSize = captureDevice.PreviewResolution;
-                    cameraBitmap = new WriteableBitmap((int)previewSize.Width, (int)previewSize.Height);
-                }
+                _cameraSource = new CameraPreviewImageSource(value);
             }
         }
 
-        public Windows.Foundation.Size OutputBufferSize
-        {
-            set
-            {
-                outputBufferSize = value;
-            }
-        }
+        public Windows.Foundation.Size OutputBufferSize { get; set; }
 
         public async Task GetNewFrameAndApplyEffect(IBuffer processedBuffer)
         {
-            if (captureDevice == null)
-            {
-                return;
-            }
-
-            captureDevice.GetPreviewBufferArgb(cameraBitmap.Pixels);
-
             Bitmap outputBtm = new Bitmap(
-                outputBufferSize,
-                ColorMode.Bgra8888,
-                (uint)outputBufferSize.Width * 4, // 4 bytes per pixel in BGRA888 mode
-                processedBuffer);
+                               OutputBufferSize,
+                               ColorMode.Bgra8888,
+                               (uint)outputBufferSize.Width * 4, // 4 bytes per pixel in BGRA888 mode
+                               processedBuffer); 
 
-            using (EditingSession session = new EditingSession(cameraBitmap.AsBitmap()))
+            FilterEffect session = new FilterEffect(_cameraSource);
+            IList<IFilter> filters = new List<IFilter>();
+            
+            switch (effectIndex)
             {
-                switch (effectIndex)
-                {
-                    case 0:
-                        session.AddFilter(FilterFactory.CreateLomoFilter(0.5, 0.5, LomoVignetting.High, LomoStyle.Yellow));
-                        break;
-                    case 1:
-                        session.AddFilter(FilterFactory.CreateMagicPenFilter());
-                        break;
-                    case 2:
-                        session.AddFilter(FilterFactory.CreateGrayscaleFilter());
-                        break;
-                    case 3:
-                        session.AddFilter(FilterFactory.CreateAntiqueFilter());
-                        break;
-                    case 4:
-                        session.AddFilter(FilterFactory.CreateStampFilter(5, 100));
-                        break;
-                    case 5:
-                        session.AddFilter(FilterFactory.CreateCartoonFilter(false));
-                        break;
-                }
-
-                await session.RenderToBitmapAsync(outputBtm);
+                case 0:
+                    filters.Add(new LomoFilter(0.5, 0.5, LomoVignetting.High, LomoStyle.Yellow));
+                    break;
+                case 1:
+                    filters.Add(new MagicPenFilter());
+                    break;
+                case 2:
+                    filters.Add(new GrayscaleFilter());
+                    break;
+                case 3:
+                    filters.Add(new AntiqueFilter());
+                    break;
+                case 4:
+                    filters.Add(new StampFilter(5, 100));
+                    break;
+                case 5:
+                    filters.Add(new CartoonFilter(false));
+                    break;
             }
+            session.Filters = filters;
+
+            BitmapRenderer renderer = new BitmapRenderer(session, outputBtm);
+            await renderer.RenderAsync();
         }
 
         /// <summary>
