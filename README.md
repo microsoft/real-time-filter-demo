@@ -8,8 +8,9 @@ camera and shown in the viewfinder. This app does not support capturing photos.
 This example application is hosted in GitHub:
 https://github.com/nokia-developer/real-time-filter-demo
 
-For more information on implementation visit the wiki pages:
-https://github.com/nokia-developer/real-time-filter-demo/wiki
+For more information on implementation visit Nokia Lumia
+Developer's Library:
+http://developer.nokia.com/Resources/Library/Lumia/#!nokia-imaging-sdk/sample-projects/real-time-filter-demo.html
 
 
 1. Prerequisites
