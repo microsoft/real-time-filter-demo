@@ -13,7 +13,6 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Navigation;
 using Windows.Phone.Media.Capture;
 
@@ -21,7 +20,6 @@ namespace RealtimeFilterDemo
 {
     public partial class MainPage : PhoneApplicationPage
     {
-        private MediaElement _mediaElement = null;
         private PhotoCaptureDevice _photoCaptureDevice = null;
         private NokiaImagingSDKEffects _cameraEffect = null;
         private CameraStreamSource _cameraStreamSource = null;
@@ -86,12 +84,7 @@ namespace RealtimeFilterDemo
             _cameraStreamSource = new CameraStreamSource(_cameraEffect, resolution);
             _cameraStreamSource.FrameRateChanged += CameraStreamSource_FPSChanged;
 
-            _mediaElement = new MediaElement();
-            _mediaElement.Stretch = Stretch.UniformToFill;
-            _mediaElement.BufferingTime = new TimeSpan(0);
-            _mediaElement.SetSource(_cameraStreamSource);
-
-            BackgroundVideoBrush.SetSource(_mediaElement);
+            MediaElement.SetSource(_cameraStreamSource);
 
             StatusTextBlock.Text = _cameraEffect.EffectName;
         }
@@ -100,11 +93,7 @@ namespace RealtimeFilterDemo
         {
             StatusTextBlock.Text = "";
 
-            if (_mediaElement != null)
-            {
-                _mediaElement.Source = null;
-                _mediaElement = null;
-            }
+            MediaElement.Source = null;
 
             if (_cameraStreamSource != null)
             {
