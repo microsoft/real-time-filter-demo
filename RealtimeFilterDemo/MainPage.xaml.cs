@@ -91,6 +91,9 @@ namespace RealtimeFilterDemo
             _mediaElement.BufferingTime = new TimeSpan(0);
             _mediaElement.SetSource(_cameraStreamSource);
 
+            // Using VideoBrush in XAML instead of MediaElement, because otherwise
+            // CameraStreamSource.CloseMedia() does not seem to be called by the framework:/
+
             BackgroundVideoBrush.SetSource(_mediaElement);
 
             StatusTextBlock.Text = _cameraEffect.EffectName;
