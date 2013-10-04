@@ -1,289 +1,161 @@
-﻿/**
- * Copyright (c) 2013 Nokia Corporation.
+﻿/*
+ * Copyright © 2013 Nokia Corporation. All rights reserved.
+ * Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation. 
+ * Other product and company names mentioned herein may be trademarks
+ * or trade names of their respective owners. 
+ * See LICENSE.TXT for license information.
  */
+
+using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
+using RealtimeFilterDemo.Resources;
+using System;
+using System.Linq;
+using System.Threading;
+using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Navigation;
+using Windows.Phone.Media.Capture;
 
 namespace RealtimeFilterDemo
 {
-    using Microsoft.Phone.Controls;
-    using Microsoft.Phone.Shell;
-
-    using System;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Media;
-    using System.Windows.Media.Animation;
-    using System.Windows.Navigation;
-
-    using Windows.Phone.Media.Capture;
-    using Size = Windows.Foundation.Size;
-
-    using RealtimeFilterDemo.Resources;
-
-    /// <summary>
-    /// The application main page.
-    /// </summary>
     public partial class MainPage : PhoneApplicationPage
     {
-        // Constants
-        private const String BackIconUri = "/Assets/Icons/back.png";
-        private const String NextIconUri = "/Assets/Icons/next.png";
-        private const String AboutPageUri = "/AboutPage.xaml";
-        private const double AspectRatio = 4.0 / 3.0;
-        private const double MediaElementWidth = 640;
-        private const double MediaElementHeight = 480;
+        private MediaElement _mediaElement = null;
+        private PhotoCaptureDevice _photoCaptureDevice = null;
+        private NokiaImagingSDKEffects _cameraEffect = null;
+        private CameraStreamSource _cameraStreamSource = null;
+        private Semaphore _cameraSemaphore = new Semaphore(1, 1);
 
-        // Members
-        private PhotoCaptureDevice camera;
-        private readonly ICameraEffect cameraEffect;
-        private CameraStreamSource source;
-        private MediaElement mediaElement;
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
         public MainPage()
         {
             InitializeComponent();
-            cameraEffect = new NokiaImagingSDKEffects();
-            BuildApplicationBar();
-        }
 
-        /// <summary>
-        /// Creates the application bar and its items.
-        /// </summary>
-        private void BuildApplicationBar()
-        {
             ApplicationBar = new ApplicationBar();
 
-            ApplicationBarIconButton button =
-                new ApplicationBarIconButton(new Uri(BackIconUri, UriKind.Relative));
-            button.Text = AppResources.PreviousEffectButtonText;
-            button.Click += OnBackButtonClicked;
-            ApplicationBar.Buttons.Add(button);
+            var previousButton = new ApplicationBarIconButton(new Uri("/Assets/Icons/previous.png", UriKind.Relative));
+            previousButton.Text = AppResources.PreviousEffectButtonText;
+            previousButton.Click += PreviousButton_Click;
 
-            button = new ApplicationBarIconButton(new Uri(NextIconUri, UriKind.Relative));
-            button.Text = AppResources.NextEffectButtonText;
-            button.Click += OnNextButtonClicked;
-            ApplicationBar.Buttons.Add(button);
+            ApplicationBar.Buttons.Add(previousButton);
 
-            ApplicationBarMenuItem menuItem =
-                new ApplicationBarMenuItem();
-            menuItem.Text = AppResources.AboutPageButtonText;
-            menuItem.Click += OnAboutPageButtonClicked;
-            ApplicationBar.MenuItems.Add(menuItem);
+            var nextButton = new ApplicationBarIconButton(new Uri("/Assets/Icons/next.png", UriKind.Relative));
+            nextButton.Text = AppResources.NextEffectButtonText;
+            nextButton.Click += NextButton_Click;
+
+            ApplicationBar.Buttons.Add(nextButton);
+
+            var aboutMenuItem = new ApplicationBarMenuItem();
+            aboutMenuItem.Text = AppResources.AboutPageButtonText;
+            aboutMenuItem.Click += AboutMenuItem_Click;
+
+            ApplicationBar.MenuItems.Add(aboutMenuItem);
         }
 
-        /// <summary>
-        /// Opens and sets up the camera if not already. Creates a new
-        /// CameraStreamSource with an effect and shows it on the screen via
-        /// the media element.
-        /// </summary>
-        private async void Initialize()
-        {
-            Debug.WriteLine("MainPage.Initialize()");
-            Size mediaElementSize = new Size(MediaElementWidth, MediaElementHeight);
-
-            if (camera == null)
-            {
-                // Resolve the capture resolution and open the camera
-                var captureResolutions =
-                    PhotoCaptureDevice.GetAvailableCaptureResolutions(CameraSensorLocation.Back);
-
-                Size selectedCaptureResolution =
-                    captureResolutions.Where(
-                        resolution => Math.Abs(AspectRatio - resolution.Width / resolution.Height) <= 0.1)
-                            .OrderBy(resolution => resolution.Width).Last();
-
-                camera = await PhotoCaptureDevice.OpenAsync(
-                    CameraSensorLocation.Back, selectedCaptureResolution);
-
-                // Set the image orientation prior to encoding
-                camera.SetProperty(KnownCameraGeneralProperties.EncodeWithOrientation,
-                    camera.SensorLocation == CameraSensorLocation.Back
-                    ? camera.SensorRotationInDegrees : -camera.SensorRotationInDegrees);
-
-                // Resolve and set the preview resolution
-                var previewResolutions =
-                    PhotoCaptureDevice.GetAvailablePreviewResolutions(CameraSensorLocation.Back);
-
-                Size selectedPreviewResolution =
-                    previewResolutions.Where(
-                        resolution => Math.Abs(AspectRatio - resolution.Width / resolution.Height) <= 0.1)
-                            .Where(resolution => (resolution.Height >= mediaElementSize.Height)
-                                   && (resolution.Width >= mediaElementSize.Width))
-                                .OrderBy(resolution => resolution.Width).First();
-
-                await camera.SetPreviewResolutionAsync(selectedPreviewResolution);
-
-                cameraEffect.CaptureDevice = camera;
-            }
-
-            if (mediaElement == null)
-            {
-                mediaElement = new MediaElement();
-                mediaElement.Stretch = Stretch.UniformToFill;
-                mediaElement.BufferingTime = new TimeSpan(0);
-                mediaElement.Tap += OnMyCameraMediaElementTapped;
-                source = new CameraStreamSource(cameraEffect, mediaElementSize);
-                mediaElement.SetSource(source);
-                MediaElementContainer.Children.Add(mediaElement);
-                source.FPSChanged += OnFPSChanged;
-            }
-            
-            // Show the index and the name of the current effect
-            if (cameraEffect is NokiaImagingSDKEffects)
-            {
-                NokiaImagingSDKEffects effects =
-                    cameraEffect as NokiaImagingSDKEffects;
-
-                EffectNameTextBlock.Text =
-                    (effects.EffectIndex + 1) + "/"
-                    + NokiaImagingSDKEffects.NumberOfEffects
-                    + ": " + effects.EffectName;
-            }
-            else
-            {
-                EffectNameTextBlock.Text = cameraEffect.EffectName;
-            }
-        }
-
-        /// <summary>
-        /// Changes the camera effect.
-        /// </summary>
-        /// <param name="next">If true, will increase the effect index.
-        /// If false, will decrease it.</param>
-        private void ChangeEffect(bool next)
-        {
-            if (cameraEffect == null
-                || !(cameraEffect is NokiaImagingSDKEffects))
-            {
-                return;
-            }
-
-            NokiaImagingSDKEffects effects =
-                cameraEffect as NokiaImagingSDKEffects;
-
-            if (next)
-            {
-                if (effects.EffectIndex
-                    < NokiaImagingSDKEffects.NumberOfEffects - 1)
-                {
-                    effects.EffectIndex++;
-                }
-                else
-                {
-                    effects.EffectIndex = 0;
-                }
-            }
-            else
-            {
-                if (effects.EffectIndex > 0)
-                {
-                    effects.EffectIndex--;
-                }
-                else
-                {
-                    effects.EffectIndex =
-                        NokiaImagingSDKEffects.NumberOfEffects - 1;
-                }
-            }
-
-            EffectNameTextBlock.Text =
-                (effects.EffectIndex + 1) + "/"
-                + NokiaImagingSDKEffects.NumberOfEffects
-                + ": " + cameraEffect.EffectName;
-        }
-
-        /// <summary>
-        /// From PhoneApplicationPage.
-        /// </summary>
-        /// <param name="e"></param>
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            Debug.WriteLine("MainPage.OnNavigatedTo()");
-            Initialize();
             base.OnNavigatedTo(e);
+
+            Initialize();
         }
 
-        /// <summary>
-        /// From PhoneApplicationPage.
-        /// Sets the media element source to null and disconnects the event
-        /// handling.
-        /// </summary>
-        /// <param name="e"></param>
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            Debug.WriteLine("MainPage.OnNavigatedFrom()");
-            MediaElementContainer.Children.Remove(mediaElement);
-            mediaElement = null;
+            base.OnNavigatedFrom(e);
 
-            if (camera != null)
+            while (!_cameraSemaphore.WaitOne(100));
+
+            Uninitialize();
+
+            _cameraSemaphore.Release();
+        }
+
+        private async void Initialize()
+        {
+            StatusTextBlock.Text = AppResources.MainPage_StatusTextBlock_StartingCamera;
+
+            var resolution = PhotoCaptureDevice.GetAvailablePreviewResolutions(CameraSensorLocation.Back).Last();
+
+            _photoCaptureDevice = await PhotoCaptureDevice.OpenAsync(CameraSensorLocation.Back, resolution);
+
+            await _photoCaptureDevice.SetPreviewResolutionAsync(resolution);
+
+            _cameraEffect = new NokiaImagingSDKEffects();
+            _cameraEffect.PhotoCaptureDevice = _photoCaptureDevice;
+
+            _cameraStreamSource = new CameraStreamSource(_cameraEffect, resolution);
+            _cameraStreamSource.FrameRateChanged += CameraStreamSource_FPSChanged;
+
+            _mediaElement = new MediaElement();
+            _mediaElement.Stretch = Stretch.UniformToFill;
+            _mediaElement.BufferingTime = new TimeSpan(0);
+            _mediaElement.SetSource(_cameraStreamSource);
+
+            // Using VideoBrush in XAML instead of MediaElement, because otherwise
+            // CameraStreamSource.CloseMedia() does not seem to be called by the framework:/
+
+            BackgroundVideoBrush.SetSource(_mediaElement);
+
+            StatusTextBlock.Text = _cameraEffect.EffectName;
+        }
+
+        private void Uninitialize()
+        {
+            StatusTextBlock.Text = "";
+
+            if (_mediaElement != null)
             {
-                camera.Dispose();
-                camera = null;
+                _mediaElement.Source = null;
+                _mediaElement = null;
             }
 
-            source.FPSChanged -= OnFPSChanged;
-        }
-
-        /// <summary>
-        /// Removes the source from the camera media element, so that there
-        /// would be no attempts to update the content of this page while
-        /// about page is shown, and then opens the about page.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnAboutPageButtonClicked(object sender, EventArgs e)
-        {
-            if (camera == null)
+            if (_cameraStreamSource != null)
             {
-                return;
+                _cameraStreamSource.FrameRateChanged -= CameraStreamSource_FPSChanged;
+                _cameraStreamSource = null;
             }
 
-            NavigationService.Navigate(new Uri(AboutPageUri, UriKind.Relative));
+            _cameraEffect = null;
+
+            if (_photoCaptureDevice != null)
+            {
+                _photoCaptureDevice.Dispose();
+                _photoCaptureDevice = null;
+            }
         }
 
-        /// <summary>
-        /// Changes the current camera effect.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnBackButtonClicked(object sender, EventArgs e)
+        private void AboutMenuItem_Click(object sender, EventArgs e)
         {
-            ChangeEffect(false);
+            NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
         }
 
-        /// <summary>
-        /// Changes the current camera effect.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnNextButtonClicked(object sender, EventArgs e)
+        private void NextButton_Click(object sender, EventArgs e)
         {
-            ChangeEffect(true);
+            _cameraEffect.NextEffect();
+
+            StatusTextBlock.Text = _cameraEffect.EffectName;
         }
 
-        /// <summary>
-        /// Changes the current camera effect.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnMyCameraMediaElementTapped(object sender, System.Windows.Input.GestureEventArgs e)
+        private void PreviousButton_Click(object sender, EventArgs e)
         {
-            ChangeEffect(true);
+            _cameraEffect.PreviousEffect();
+
+            StatusTextBlock.Text = _cameraEffect.EffectName;
         }
 
-        /// <summary>
-        /// Updates the FPS count on the screen.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnFPSChanged(object sender, int e)
+        private void CameraStreamSource_FPSChanged(object sender, int e)
         {
-            // Uncomment the following to display the frame rate on the screen
-            //FPSTextBlock.Text = "FPS: " + e;
+            FrameRateTextBlock.Text = String.Format(AppResources.MainPage_FrameRateTextBlock_Format, e);
+        }
+
+        private async void LayoutRoot_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            if (_cameraSemaphore.WaitOne(100))
+            {
+                await _photoCaptureDevice.FocusAsync();
+
+                _cameraSemaphore.Release();
+            }
         }
     }
 }

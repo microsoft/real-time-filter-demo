@@ -1,40 +1,37 @@
-﻿/**
- * Copyright (c) 2013 Nokia Corporation.
+﻿/*
+ * Copyright © 2013 Nokia Corporation. All rights reserved.
+ * Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation. 
+ * Other product and company names mentioned herein may be trademarks
+ * or trade names of their respective owners. 
+ * See LICENSE.TXT for license information.
  */
+
+using System;
+using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.Phone.Media.Capture;
+using Windows.Storage.Streams;
 
 namespace RealtimeFilterDemo
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime.InteropServices.WindowsRuntime;
-    using System.Text;
-    using System.Threading.Tasks;
-    using Windows.Phone.Media.Capture;
-    using Windows.Storage.Streams;
-
     public interface ICameraEffect
     {
+        /// <summary>
+        /// The camera device, the effect will poll the preview frames from it.
+        /// </summary>
+        PhotoCaptureDevice PhotoCaptureDevice { set; }
+
         /// <summary>
         /// The effect name.
         /// </summary>
         String EffectName { get; }
 
         /// <summary>
-        /// The camera device, the effect will poll the preview frames from it.
-        /// </summary>
-        PhotoCaptureDevice CaptureDevice { set; }
-
-        /// <summary>
-        /// The dimensions of the output buffer.
-        /// </summary>
-        Windows.Foundation.Size OutputBufferSize { set; }
-
-        /// <summary>
         /// Get a frame from the camera and apply an effect on it.
         /// </summary>
-        /// <param name="processedBuffer">A buffer with the camera data with the effect applied.</param>
+        /// <param name="frameBuffer">Frame to apply the effect on.</param>
+        /// <param name="frameSize">Requested frame size.</param>
         /// <returns>A task that completes when effect has been applied.</returns>
-        Task GetNewFrameAndApplyEffect(IBuffer processedBuffer);
+        Task GetNewFrameAndApplyEffect(IBuffer frameBuffer, Size frameSize);
     }
 }

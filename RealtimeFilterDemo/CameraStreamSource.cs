@@ -1,136 +1,147 @@
-﻿/**
- * Copyright (c) 2013 Nokia Corporation.
+﻿/*
+ * Copyright © 2013 Nokia Corporation. All rights reserved.
+ * Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation. 
+ * Other product and company names mentioned herein may be trademarks
+ * or trade names of their respective owners. 
+ * See LICENSE.TXT for license information.
  */
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
+using System.Windows.Media;
+using System.Windows.Threading;
+using Windows.Foundation;
 
 namespace RealtimeFilterDemo
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.IO;
-    using System.Runtime.InteropServices.WindowsRuntime;
-    using System.Threading.Tasks;
-    using System.Windows.Media;
-    using System.Windows.Threading;
-    using Windows.Foundation;
-
     /// <summary>
-    /// A source for the media element. Feeds the Media Element with frames
-    /// coming from the ICameraEffect implementation.
+    /// Filtered camera stream source for a media element. Feeds the media element with frames filtered with a ICameraEffect implementation.
     /// </summary>
     public class CameraStreamSource : MediaStreamSource
     {
-        private readonly Dictionary<MediaSampleAttributeKeys, string> emptySampleDict =
-            new Dictionary<MediaSampleAttributeKeys, string>();
-        
-        private MediaStreamDescription videoStreamDescription;
-        private long currentTime;
-        private int frameStreamOffset;
-        private int frameTime;
-        private int frameCount;
+        private readonly Dictionary<MediaSampleAttributeKeys, string> _emptyAttributes = new Dictionary<MediaSampleAttributeKeys, string>();
+        private MediaStreamDescription _videoStreamDescription = null;
+        private DispatcherTimer _frameRateTimer = null;
+        private MemoryStream _frameStream = null;
+        private ICameraEffect _cameraEffect = null;
+        private long _currentTime = 0;
+        private int _frameStreamOffset = 0;
+        private int _frameTime = 0;
+        private int _frameCount = 0;
+        private Size _frameSize = new Size(0, 0);
+        private int _frameBufferSize = 0;
+        private byte[] _frameBuffer = null;
 
         /// <summary>
-        /// Occurs when the FPS count changes.
+        /// Occurs when rendering frame rate changes.
         /// </summary>
-        public event EventHandler<int> FPSChanged;
+        public event EventHandler<int> FrameRateChanged;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="cameraEffect">The camera effect to use.</param>
-        /// <param name="targetMediaElementSize">The size of the element where
-        /// the stream is rendered to.</param>
-        public CameraStreamSource(ICameraEffect cameraEffect, Size targetMediaElementSize)
+        /// <param name="_cameraEffect">Camera effect to use.</param>
+        /// <param name="size">Size of the media element where the stream is rendered to.</param>
+        public CameraStreamSource(ICameraEffect cameraEffect, Size size)
         {
-            CameraStreamSourceDataSingleton dataSource = CameraStreamSourceDataSingleton.Instance;
-            dataSource.Initialize(targetMediaElementSize);
-            dataSource.CameraEffect = cameraEffect;
-            cameraEffect.OutputBufferSize = targetMediaElementSize;
+            _cameraEffect = cameraEffect;
+
+            _frameSize = size;
         }
 
         /// <summary>
-        /// Initialises the data structures to pass data to the media pipeline
-        /// via the MediaStreamSource.
+        /// Initialises the data structures to pass data to the media pipeline via the MediaStreamSource.
         /// </summary>
         protected override void OpenMediaAsync()
         {
-            Dictionary<MediaSourceAttributesKeys, string> mediaSourceAttributes =
-                new Dictionary<MediaSourceAttributesKeys, string>();
-            Dictionary<MediaStreamAttributeKeys, string> mediaStreamAttributes =
-                new Dictionary<MediaStreamAttributeKeys, string>();
-            List<MediaStreamDescription> mediaStreamDescriptions =
-                new List<MediaStreamDescription>();
+            // General properties
 
-            CameraStreamSourceDataSingleton dataSource = CameraStreamSourceDataSingleton.Instance;
+            _frameBufferSize = (int)_frameSize.Width * (int)_frameSize.Height * 4; // RGBA
+            _frameBuffer = new byte[_frameBufferSize];
+            _frameStream = new MemoryStream(_frameBuffer);
+
+            // Media stream attributes
+
+            var mediaStreamAttributes = new Dictionary<MediaStreamAttributeKeys, string>();
 
             mediaStreamAttributes[MediaStreamAttributeKeys.VideoFourCC] = "RGBA";
-            mediaStreamAttributes[MediaStreamAttributeKeys.Width] = dataSource.FrameWidth.ToString();
-            mediaStreamAttributes[MediaStreamAttributeKeys.Height] = dataSource.FrameHeight.ToString();
+            mediaStreamAttributes[MediaStreamAttributeKeys.Width] = ((int)_frameSize.Width).ToString();
+            mediaStreamAttributes[MediaStreamAttributeKeys.Height] = ((int)_frameSize.Height).ToString();
 
-            videoStreamDescription =
-                new MediaStreamDescription(MediaStreamType.Video, mediaStreamAttributes);
-            mediaStreamDescriptions.Add(videoStreamDescription);
+            _videoStreamDescription = new MediaStreamDescription(MediaStreamType.Video, mediaStreamAttributes);
 
-            // A zero timespan is an infinite video
-            mediaSourceAttributes[MediaSourceAttributesKeys.Duration] =
-                TimeSpan.FromSeconds(0).Ticks.ToString(CultureInfo.InvariantCulture);
+            // Media stream descriptions
 
+            var mediaStreamDescriptions = new List<MediaStreamDescription>();
+            mediaStreamDescriptions.Add(_videoStreamDescription);
+
+            // Media source attributes
+
+            var mediaSourceAttributes = new Dictionary<MediaSourceAttributesKeys, string>();
+            mediaSourceAttributes[MediaSourceAttributesKeys.Duration] = TimeSpan.FromSeconds(0).Ticks.ToString(CultureInfo.InvariantCulture);
             mediaSourceAttributes[MediaSourceAttributesKeys.CanSeek] = false.ToString();
 
-            frameTime = (int)TimeSpan.FromSeconds((double)0).Ticks;
+            _frameTime = (int)TimeSpan.FromSeconds((double)0).Ticks;
 
-            // Report that we finished initializing its internal state and can now
-            // pass in frame samples.
+            // Start frame rate timer
+
+            _frameRateTimer = new DispatcherTimer() { Interval = TimeSpan.FromSeconds(1) };
+            _frameRateTimer.Tick += FrameRateTimer_Tick;
+            _frameRateTimer.Start();
+
+            // Report that we finished initializing its internal state and can now pass in frame samples
+
             ReportOpenMediaCompleted(mediaSourceAttributes, mediaStreamDescriptions);
-
-            DispatcherTimer fpsTimer = new DispatcherTimer();
-            fpsTimer.Interval = TimeSpan.FromSeconds(1);
-            fpsTimer.Tick += Fps_Tick; 
-            fpsTimer.Start();
-        }
-
-        /// <summary>
-        /// Processes the camera buffer using the set effect and provides the
-        /// media element with the buffer.
-        /// </summary>
-        /// <param name="mediaStreamType">Not used.</param>
-        protected override void GetSampleAsync(MediaStreamType mediaStreamType)
-        {
-            CameraStreamSourceDataSingleton dataSource = CameraStreamSourceDataSingleton.Instance;
-
-            if (frameStreamOffset + dataSource.FrameBufferSize > dataSource.FrameStreamSize)
-            {
-                dataSource.FrameStream.Seek(0, SeekOrigin.Begin);
-                frameStreamOffset = 0;
-            }
-
-            Task tsk = dataSource.CameraEffect.GetNewFrameAndApplyEffect(dataSource.ImageBuffer.AsBuffer());
-           
-            // Wait that the asynchroneous call completes, and proceed by reporting 
-            // the MediaElement that new samples are ready.
-            tsk.ContinueWith((task) =>
-            {
-                dataSource.FrameStream.Position = 0;
-
-                MediaStreamSample msSample = new MediaStreamSample(
-                    videoStreamDescription, 
-                    dataSource.FrameStream, 
-                    frameStreamOffset,
-                    dataSource.FrameBufferSize,
-                    currentTime,
-                    emptySampleDict);
-
-                ReportGetSampleCompleted(msSample);
-                frameCount++;
-                currentTime += frameTime;
-                frameStreamOffset += dataSource.FrameBufferSize;
-            });
         }
 
         protected override void CloseMedia()
         {
-            // No implementation required
+            if (_frameStream != null)
+            {
+                _frameStream.Close();
+                _frameStream = null;
+            }
+
+            if (_frameRateTimer != null)
+            {
+                _frameRateTimer.Stop();
+                _frameRateTimer.Tick -= FrameRateTimer_Tick;
+                _frameRateTimer = null;
+            }
+
+            _frameStreamOffset = 0;
+            _frameTime = 0;
+            _frameCount = 0;
+            _frameBufferSize = 0;
+            _frameBuffer = null;
+            _videoStreamDescription = null;
+            _currentTime = 0;
+        }
+
+        /// <summary>
+        /// Processes camera frameBuffer using the set effect and provides media element with a filtered frameBuffer.
+        /// </summary>
+        protected override void GetSampleAsync(MediaStreamType mediaStreamType)
+        {
+            var task = _cameraEffect.GetNewFrameAndApplyEffect(_frameBuffer.AsBuffer(), _frameSize);
+           
+            // When asynchroneous call completes, proceed by reporting about the sample completion
+
+            task.ContinueWith((action) =>
+            {
+                _frameStream.Position = 0;
+                _currentTime += _frameTime;
+                _frameCount++;
+
+                var sample = new MediaStreamSample(_videoStreamDescription, _frameStream, _frameStreamOffset, _frameBufferSize, _currentTime, _emptyAttributes);
+
+                ReportGetSampleCompleted(sample);
+            });
         }
 
         protected override void GetDiagnosticAsync(MediaStreamSourceDiagnosticKind diagnosticKind)
@@ -140,8 +151,9 @@ namespace RealtimeFilterDemo
 
         protected override void SeekAsync(long seekToTime)
         {
-            currentTime = seekToTime;
-            ReportSeekCompleted(seekToTime);
+            _currentTime = seekToTime;
+
+            ReportSeekCompleted(_currentTime);
         }
 
         protected override void SwitchMediaStreamAsync(MediaStreamDescription mediaStreamDescription)
@@ -149,21 +161,14 @@ namespace RealtimeFilterDemo
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Notifies the handler(s) about the current frame rate.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Fps_Tick(object sender, EventArgs e)
+        private void FrameRateTimer_Tick(object sender, EventArgs e)
         {
-            EventHandler<int> handler = FPSChanged;
-
-            if (handler != null)
+            if (FrameRateChanged != null)
             {
-                handler(this, frameCount);
+                FrameRateChanged(this, _frameCount);
             }
 
-            frameCount = 0;
+            _frameCount = 0;
         }
     }
 }

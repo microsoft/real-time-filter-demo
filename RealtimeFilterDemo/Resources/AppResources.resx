@@ -129,15 +129,63 @@
     <value>REAL-TIME FILTER DEMO</value>
   </data>
   <data name="AboutPageButtonText" xml:space="preserve">
-    <value>About</value>
+    <value>about</value>
   </data>
   <data name="AboutPageTitle" xml:space="preserve">
     <value>about</value>
   </data>
   <data name="NextEffectButtonText" xml:space="preserve">
-    <value>Change effect</value>
+    <value>Next effect</value>
   </data>
   <data name="PreviousEffectButtonText" xml:space="preserve">
-    <value>Change effect</value>
+    <value>Previous effect</value>
+  </data>
+  <data name="AboutPage_AboutRun_Text" xml:space="preserve">
+    <value>This is a Nokia example application demonstrating the real-time use of effects provided by the Nokia Imaging SDK. The effects are applies to the stream of images received from the camera device.</value>
+  </data>
+  <data name="AboutPage_Hyperlink_Project" xml:space="preserve">
+    <value>http://www.github.com/nokia-developer/real-time-filter-demo/</value>
+  </data>
+  <data name="AboutPage_ProjectRun_Text" xml:space="preserve">
+    <value>For more information and application source code go to {0}.</value>
+  </data>
+  <data name="AboutPage_VersionRun_Text" xml:space="preserve">
+    <value>Real-time Filter Demo version {0}</value>
+  </data>
+  <data name="MainPage_FrameRateTextBlock_Format" xml:space="preserve">
+    <value>{0} FPS</value>
+  </data>
+  <data name="MainPage_StatusTextBlock_StartingCamera" xml:space="preserve">
+    <value>Starting camera...</value>
+  </data>
+  <data name="Filter_Antique" xml:space="preserve">
+    <value>Antique</value>
+  </data>
+  <data name="Filter_Cartoon" xml:space="preserve">
+    <value>Cartoon</value>
+  </data>
+  <data name="Filter_Grayscale" xml:space="preserve">
+    <value>Grayscale</value>
+  </data>
+  <data name="Filter_Lomo" xml:space="preserve">
+    <value>Lomo</value>
+  </data>
+  <data name="Filter_MagicPen" xml:space="preserve">
+    <value>Magic Pen</value>
+  </data>
+  <data name="Filter_None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="Filter_Stamp" xml:space="preserve">
+    <value>Stamp</value>
+  </data>
+  <data name="Filter_AutoEnhance" xml:space="preserve">
+    <value>Auto Enhance</value>
+  </data>
+  <data name="Filter_Sepia" xml:space="preserve">
+    <value>Sepia</value>
+  </data>
+  <data name="Filter_Sharpness" xml:space="preserve">
+    <value>Sharpness</value>
   </data>
 </root>
