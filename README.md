@@ -58,7 +58,6 @@ Developed with Microsoft Visual Studio Express for Windows Phone 2012.
 -------------------------
 
 * `ID_CAP_ISV_CAMERA`
-* `ID_CAP_MEDIALIB_AUDIO`
 * `ID_CAP_MEDIALIB_PLAYBACK`
 
 3.2 Known Issues
