@@ -1,138 +1,210 @@
-﻿/**
- * Copyright (c) 2013 Nokia Corporation.
+﻿/*
+ * Copyright © 2013 Nokia Corporation. All rights reserved.
+ * Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation. 
+ * Other product and company names mentioned herein may be trademarks
+ * or trade names of their respective owners. 
+ * See LICENSE.TXT for license information.
  */
+
+using Nokia.Graphics.Imaging;
+using RealtimeFilterDemo.Resources;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Windows.Foundation;
+using Windows.Phone.Media.Capture;
+using Windows.Storage.Streams;
 
 namespace RealtimeFilterDemo
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Windows.Media.Imaging;
-    using System.Runtime.InteropServices.WindowsRuntime;
-
-    using Windows.Foundation;
-    using Windows.Phone.Media.Capture;
-    using Windows.Storage.Streams;
-
-    using Nokia.Graphics;
-    using Nokia.Graphics.Imaging;
-    using Nokia.InteropServices.WindowsRuntime;
-
-    /// <summary>
-    /// A concrete implementation of the ICameraEffect.
-    /// </summary>
     public class NokiaImagingSDKEffects : ICameraEffect
     {
-        // Constants
-        public static readonly int NumberOfEffects = 6;
+        private PhotoCaptureDevice _photoCaptureDevice = null;
+        private CameraPreviewImageSource _cameraPreviewImageSource = null;
+        private FilterEffect _filterEffect = null;
+        private int _effectIndex = 0;
+        private int _effectCount = 10;
+        private Semaphore _semaphore = new Semaphore(1, 1);
 
-        // Members
-        private PhotoCaptureDevice captureDevice;
-        private WriteableBitmap cameraBitmap;
-        private Windows.Foundation.Size outputBufferSize;
-        private int effectIndex = 0;
+        public String EffectName { get; private set; }
 
-        public String EffectName
-        {
-            get
-            {
-                switch (effectIndex)
-                {
-                    case 0: return "Lomo";
-                    case 1: return "Magic pen";
-                    case 2: return "Grayscale";
-                    case 3: return "Antique";
-                    case 4: return "Stamp";
-                    case 5: return "Cartoon";
-                }
-
-                return "Undefined";
-            }
-        }
-
-        public PhotoCaptureDevice CaptureDevice
+        public PhotoCaptureDevice PhotoCaptureDevice
         {
             set
             {
-                captureDevice = value;
-
-                if (captureDevice != null)
+                if (_photoCaptureDevice != value)
                 {
-                    Windows.Foundation.Size previewSize = captureDevice.PreviewResolution;
-                    cameraBitmap = new WriteableBitmap((int)previewSize.Width, (int)previewSize.Height);
+                    while (!_semaphore.WaitOne(100));
+
+                    _photoCaptureDevice = value;
+
+                    Initialize();
+
+                    _semaphore.Release();
                 }
             }
         }
 
-        public Windows.Foundation.Size OutputBufferSize
+        ~NokiaImagingSDKEffects()
         {
-            set
+            while (!_semaphore.WaitOne(100));
+
+            Uninitialize();
+
+            _semaphore.Release();
+        }
+
+        public async Task GetNewFrameAndApplyEffect(IBuffer frameBuffer, Size frameSize)
+        {
+            if (_semaphore.WaitOne(500))
             {
-                outputBufferSize = value;
+                var scanlineByteSize = (uint)frameSize.Width * 4; // 4 bytes per pixel in BGRA888 mode
+                var bitmap = new Bitmap(frameSize, ColorMode.Argb8888, scanlineByteSize, frameBuffer);
+                var renderer = new BitmapRenderer(_filterEffect, bitmap);
+
+                await renderer.RenderAsync();
+
+                _semaphore.Release();
             }
         }
 
-        public async Task GetNewFrameAndApplyEffect(IBuffer processedBuffer)
+        public void NextEffect()
         {
-            if (captureDevice == null)
+            if (_semaphore.WaitOne(500))
             {
-                return;
-            }
+                Uninitialize();
 
-            captureDevice.GetPreviewBufferArgb(cameraBitmap.Pixels);
+                _effectIndex++;
 
-            Bitmap outputBtm = new Bitmap(
-                outputBufferSize,
-                ColorMode.Bgra8888,
-                (uint)outputBufferSize.Width * 4, // 4 bytes per pixel in BGRA888 mode
-                processedBuffer);
-
-            using (EditingSession session = new EditingSession(cameraBitmap.AsBitmap()))
-            {
-                switch (effectIndex)
+                if (_effectIndex >= _effectCount)
                 {
-                    case 0:
-                        session.AddFilter(FilterFactory.CreateLomoFilter(0.5, 0.5, LomoVignetting.High, LomoStyle.Yellow));
-                        break;
-                    case 1:
-                        session.AddFilter(FilterFactory.CreateMagicPenFilter());
-                        break;
-                    case 2:
-                        session.AddFilter(FilterFactory.CreateGrayscaleFilter());
-                        break;
-                    case 3:
-                        session.AddFilter(FilterFactory.CreateAntiqueFilter());
-                        break;
-                    case 4:
-                        session.AddFilter(FilterFactory.CreateStampFilter(5, 100));
-                        break;
-                    case 5:
-                        session.AddFilter(FilterFactory.CreateCartoonFilter(false));
-                        break;
+                    _effectIndex = 0;
                 }
 
-                await session.RenderToBitmapAsync(outputBtm);
+                Initialize();
+
+                _semaphore.Release();
             }
         }
 
-        /// <summary>
-        /// The effect index.
-        /// </summary>
-        public int EffectIndex
+        public void PreviousEffect()
         {
-            get
+            if (_semaphore.WaitOne(500))
             {
-                return effectIndex;
-            }
-            set
-            {
-                if (effectIndex != value && value < NumberOfEffects)
+                Uninitialize();
+                
+                _effectIndex--;
+
+                if (_effectIndex < 0)
                 {
-                    effectIndex = value;
+                    _effectIndex = _effectCount - 1;
                 }
+
+                Initialize();
+
+                _semaphore.Release();
             }
+        }
+
+        private void Uninitialize()
+        {
+            if (_cameraPreviewImageSource != null)
+            {
+                _cameraPreviewImageSource.Dispose();
+                _cameraPreviewImageSource = null;
+            }
+
+            if (_filterEffect != null)
+            {
+                _filterEffect.Dispose();
+                _filterEffect = null;
+            }
+        }
+
+        private void Initialize()
+        {
+            var filters = new List<IFilter>();
+            var nameFormat = "{0}/" + _effectCount + " - {1}";
+
+            switch (_effectIndex)
+            {
+                case 0:
+                    {
+                        EffectName = String.Format(nameFormat, 1, AppResources.Filter_Lomo);
+                        filters.Add(new LomoFilter(0.5, 0.5, LomoVignetting.High, LomoStyle.Yellow));
+                    }
+                    break;
+
+                case 1:
+                    {
+                        EffectName = String.Format(nameFormat, 2, AppResources.Filter_MagicPen);
+                        filters.Add(new MagicPenFilter());
+                    }
+                    break;
+
+                case 2:
+                    {
+                        EffectName = String.Format(nameFormat, 3, AppResources.Filter_Grayscale);
+                        filters.Add(new GrayscaleFilter());
+                    }
+                    break;
+
+                case 3:
+                    {
+                        EffectName = String.Format(nameFormat, 4, AppResources.Filter_Antique);
+                        filters.Add(new AntiqueFilter());
+                    }
+                    break;
+
+                case 4:
+                    {
+                        EffectName = String.Format(nameFormat, 5, AppResources.Filter_Stamp);
+                        filters.Add(new StampFilter(5, 100));
+                    }
+                    break;
+
+                case 5:
+                    {
+                        EffectName = String.Format(nameFormat, 6, AppResources.Filter_Cartoon);
+                        filters.Add(new CartoonFilter(false));
+                    }
+                    break;
+
+                case 6:
+                    {
+                        EffectName = String.Format(nameFormat, 7, AppResources.Filter_Sepia);
+                        filters.Add(new SepiaFilter());
+                    }
+                    break;
+
+                case 7:
+                    {
+                        EffectName = String.Format(nameFormat, 8, AppResources.Filter_Sharpness);
+                        filters.Add(new SharpnessFilter(7));
+                    }
+                    break;
+
+                case 8:
+                    {
+                        EffectName = String.Format(nameFormat, 9, AppResources.Filter_AutoEnhance);
+                        filters.Add(new AutoEnhanceFilter());
+                    }
+                    break;
+
+                case 9:
+                    {
+                        EffectName = String.Format(nameFormat, 10, AppResources.Filter_None);
+                    }
+                    break;
+            }
+
+            _cameraPreviewImageSource = new CameraPreviewImageSource(_photoCaptureDevice);
+
+            _filterEffect = new FilterEffect(_cameraPreviewImageSource)
+            {
+                Filters = filters
+            };
         }
     }
 }
