@@ -151,6 +151,15 @@ namespace RealtimeFilterDemo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Inverse Weighted Grayscale.
+        /// </summary>
+        public static string Filter_Custom {
+            get {
+                return ResourceManager.GetString("Filter_Custom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Grayscale.
         /// </summary>
         public static string Filter_Grayscale {

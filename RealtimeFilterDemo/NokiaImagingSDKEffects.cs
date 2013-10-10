@@ -23,8 +23,9 @@ namespace RealtimeFilterDemo
         private PhotoCaptureDevice _photoCaptureDevice = null;
         private CameraPreviewImageSource _cameraPreviewImageSource = null;
         private FilterEffect _filterEffect = null;
+        private CustomEffectBase _customEffect = null;
         private int _effectIndex = 0;
-        private int _effectCount = 10;
+        private int _effectCount = 11;
         private Semaphore _semaphore = new Semaphore(1, 1);
 
         public String EffectName { get; private set; }
@@ -60,10 +61,23 @@ namespace RealtimeFilterDemo
             if (_semaphore.WaitOne(500))
             {
                 var scanlineByteSize = (uint)frameSize.Width * 4; // 4 bytes per pixel in BGRA888 mode
-                var bitmap = new Bitmap(frameSize, ColorMode.Argb8888, scanlineByteSize, frameBuffer);
-                var renderer = new BitmapRenderer(_filterEffect, bitmap);
+                var bitmap = new Bitmap(frameSize, ColorMode.Bgra8888, scanlineByteSize, frameBuffer);
 
-                await renderer.RenderAsync();
+                if (_filterEffect != null)
+                {
+                    var renderer = new BitmapRenderer(_filterEffect, bitmap);
+                    await renderer.RenderAsync();
+                }
+                else if (_customEffect != null)
+                {
+                    var renderer = new BitmapRenderer(_customEffect, bitmap);
+                    await renderer.RenderAsync();
+                }
+                else
+                {
+                    var renderer = new BitmapRenderer(_cameraPreviewImageSource, bitmap);
+                    await renderer.RenderAsync();
+                }
 
                 _semaphore.Release();
             }
@@ -120,12 +134,20 @@ namespace RealtimeFilterDemo
                 _filterEffect.Dispose();
                 _filterEffect = null;
             }
+
+            if (_customEffect != null)
+            {
+                _customEffect.Dispose();
+                _customEffect = null;
+            }
         }
 
         private void Initialize()
         {
             var filters = new List<IFilter>();
             var nameFormat = "{0}/" + _effectCount + " - {1}";
+
+            _cameraPreviewImageSource = new CameraPreviewImageSource(_photoCaptureDevice);
 
             switch (_effectIndex)
             {
@@ -160,7 +182,7 @@ namespace RealtimeFilterDemo
                 case 4:
                     {
                         EffectName = String.Format(nameFormat, 5, AppResources.Filter_Stamp);
-                        filters.Add(new StampFilter(5, 100));
+                        filters.Add(new StampFilter(5, 1.0));
                     }
                     break;
 
@@ -197,14 +219,22 @@ namespace RealtimeFilterDemo
                         EffectName = String.Format(nameFormat, 10, AppResources.Filter_None);
                     }
                     break;
+
+                case 10:
+                    {
+                        EffectName = String.Format(nameFormat, 11, AppResources.Filter_Custom);
+                        _customEffect = new CustomEffect(_cameraPreviewImageSource);
+                    }
+                    break;
             }
 
-            _cameraPreviewImageSource = new CameraPreviewImageSource(_photoCaptureDevice);
-
-            _filterEffect = new FilterEffect(_cameraPreviewImageSource)
+            if (filters.Count > 0)
             {
-                Filters = filters
-            };
+                _filterEffect = new FilterEffect(_cameraPreviewImageSource)
+                {
+                    Filters = filters
+                };
+            }
         }
     }
 }

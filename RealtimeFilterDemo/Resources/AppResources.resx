@@ -188,4 +188,7 @@
   <data name="Filter_Sharpness" xml:space="preserve">
     <value>Sharpness</value>
   </data>
+  <data name="Filter_Custom" xml:space="preserve">
+    <value>Inverse Weighted Grayscale</value>
+  </data>
 </root>
