@@ -8,8 +8,7 @@ camera and shown in the viewfinder. This app does not support capturing photos.
 This example application is hosted in GitHub:
 https://github.com/nokia-developer/real-time-filter-demo
 
-For more information on implementation visit Nokia Lumia
-Developer's Library:
+For more information on implementation visit Nokia Lumia Developer's Library:
 http://developer.nokia.com/Resources/Library/Lumia/#!nokia-imaging-sdk/sample-projects/real-time-filter-demo.html
 
 
@@ -19,6 +18,7 @@ http://developer.nokia.com/Resources/Library/Lumia/#!nokia-imaging-sdk/sample-pr
 * C# basics
 * Windows 8
 * Microsoft Visual Studio Express for Windows Phone 2012
+* Windows Phone 8 device
 
 
 2. Project structure and implementation
@@ -32,20 +32,6 @@ the instances of the two other key classes: `CameraStreamSource` and
 `NokiaImageEditingSDKEffects`. The `CameraStreamSource`, derived from
 `MediaStreamSource`, provides the camera data. The `NokiaImageEditingSDKEffects`
 implements all the effects of the application. 
-
-2.1 Used APIs
--------------
-
-* System.Linq
-* System.Runtime.InteropServices.WindowsRuntime
-* System.Threading.Tasks
-* System.Windows.Media
-* System.Windows.Threading
-* Windows.Phone.Media.Capture
-* Windows.Storage.Streams
-* Nokia.Graphics
-* Nokia.Graphics.Imaging
-* Nokia.InteropServices.WindowsRuntime
 
 
 3. Compatibility
@@ -76,28 +62,30 @@ Make sure you have the following installed:
 
 * Windows 8
 * Windows Phone SDK 8.0
+* Nuget 2.7+
 
 4.2 Using the WINDOWS PHONE 8 SDK
 ---------------------------------
 
 1. Open the SLN file:
    File > Open Project, select the solution (.sln postfix) file
-2. Select the target 'Emulator WXGA'.
-3. Press F5 to build the project and run it on the Windows Phone Emulator.
+2. Select the target 'Device' and platform 'ARM'.
+3. Press F5 to build the project and run it on device.
 
-4.3 Deploying to Windows Phone 8
---------------------------------
+If the project does not compile on the first attempt it's possible that you
+did not have the required packages yet. With Nuget 2.7 or later the missing
+packages are fetched automatically when build process is invoked, so try
+building again. If some packages cannot be found there should be an
+error stating this in the Output panel in Visual Studio Express.
 
-Please see official documentation for deploying and testing applications on
-Windows Phone devices:
+For more information on deploying and testing applications see:
 http://msdn.microsoft.com/en-us/library/gg588378%28v=vs.92%29.aspx
 
 
 5. License
 -------------------------------------------------------------------------------
 
-See the license text file delivered with this project. The license file is also
-available online at
+See the license text file
 https://github.com/nokia-developer/real-time-filter-demo/blob/master/Licence.txt
 
 
