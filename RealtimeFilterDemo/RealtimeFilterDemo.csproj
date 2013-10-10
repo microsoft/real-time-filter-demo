@@ -25,6 +25,8 @@
     <ValidateXaml>true</ValidateXaml>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -104,6 +106,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\AppManifest.xml">
       <SubType>Designer</SubType>
     </None>
@@ -146,7 +151,7 @@
       <HintPath>..\NokiaImagingSDK\$(Platform)\Nokia.Graphics.Imaging.winmd</HintPath>
     </Reference>
     <Reference Include="Nokia.Graphics.Imaging.Managed">
-      <HintPath>..\NokiaImagingSDK\$(Platform)\Nokia.Graphics.Imaging.Managed.dll</HintPath>
+      <HintPath>..\packages\NokiaImagingSDK.1.0.145.0\lib\wp8\Nokia.Graphics.Imaging.Managed.dll</HintPath>
     </Reference>
     <Reference Include="Nokia.InteropServices.WindowsRuntime">
       <HintPath>..\NokiaImagingSDK\$(Platform)\Nokia.InteropServices.WindowsRuntime.winmd</HintPath>
@@ -162,4 +167,6 @@
   </Target>
   -->
   <ProjectExtensions />
+  <Import Project="..\packages\NokiaImagingSDK.1.0.145.0\build\wp8\NokiaImagingSDK.targets" Condition="Exists('..\packages\NokiaImagingSDK.1.0.145.0\build\wp8\NokiaImagingSDK.targets')" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
 </Project>
