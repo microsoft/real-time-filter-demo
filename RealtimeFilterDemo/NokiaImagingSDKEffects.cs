@@ -182,7 +182,7 @@ namespace RealtimeFilterDemo
                 case 4:
                     {
                         EffectName = String.Format(nameFormat, 5, AppResources.Filter_Stamp);
-                        filters.Add(new StampFilter(5, 1.0));
+                        filters.Add(new StampFilter(4, 0.3));
                     }
                     break;
 
