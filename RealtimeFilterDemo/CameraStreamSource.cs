@@ -134,13 +134,16 @@ namespace RealtimeFilterDemo
 
             task.ContinueWith((action) =>
             {
-                _frameStream.Position = 0;
-                _currentTime += _frameTime;
-                _frameCount++;
+                if (_frameStream != null)
+                {
+                    _frameStream.Position = 0;
+                    _currentTime += _frameTime;
+                    _frameCount++;
 
-                var sample = new MediaStreamSample(_videoStreamDescription, _frameStream, _frameStreamOffset, _frameBufferSize, _currentTime, _emptyAttributes);
+                    var sample = new MediaStreamSample(_videoStreamDescription, _frameStream, _frameStreamOffset, _frameBufferSize, _currentTime, _emptyAttributes);
 
-                ReportGetSampleCompleted(sample);
+                    ReportGetSampleCompleted(sample);
+                }
             });
         }
 
