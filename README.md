@@ -40,11 +40,6 @@ implements all the effects of the application.
 Windows Phone 8. Tested to work on Nokia Lumia 920 and Nokia Lumia 520.
 Developed with Microsoft Visual Studio Express for Windows Phone 2012.
 
-3.1 Required Capabilities
--------------------------
-
-* `ID_CAP_ISV_CAMERA`
-* `ID_CAP_MEDIALIB_PLAYBACK`
 
 3.2 Known Issues
 ----------------
@@ -92,6 +87,13 @@ https://github.com/nokia-developer/real-time-filter-demo/blob/master/Licence.txt
 6. Version history
 -------------------------------------------------------------------------------
 
-* 1.0.1 Bug fix: MediaElement did not release the camera handle
-* 1.0 First public release
-* 0.8 First release candidate
+* 1.1.0.0: Third public release of Real-time Filter Demo
+  - Updated to use the latest Nokia Imaging SDK
+  - Added custom made inverted grayscale filter
+  - Using Nuget Package Restore for external libraries
+  - Overall code refactoring and productization
+
+* 1.0.1.0: Second public release of Real-time Filter Demo
+  - Fix: MediaElement did not release the camera handle
+  
+* 1.0.0.0: First public release of Real-time Filter Demo
