@@ -70,6 +70,38 @@ namespace RealtimeFilterDemo
             _cameraSemaphore.Release();
         }
 
+        protected override void OnOrientationChanged(OrientationChangedEventArgs e)
+        {
+            base.OnOrientationChanged(e);
+
+            if (_photoCaptureDevice != null)
+            {
+                double canvasAngle;
+
+                if (Orientation.HasFlag(PageOrientation.LandscapeLeft))
+                {
+                    canvasAngle = _photoCaptureDevice.SensorRotationInDegrees - 90;
+                }
+                else if (Orientation.HasFlag(PageOrientation.LandscapeRight))
+                {
+                    canvasAngle = _photoCaptureDevice.SensorRotationInDegrees + 90;
+                }
+                else // PageOrientation.PortraitUp
+                {
+                    canvasAngle = _photoCaptureDevice.SensorRotationInDegrees;
+                }
+
+                BackgroundVideoBrush.RelativeTransform = new RotateTransform()
+                {
+                    CenterX = 0.5,
+                    CenterY = 0.5,
+                    Angle = canvasAngle
+                };
+
+                _photoCaptureDevice.SetProperty(KnownCameraGeneralProperties.EncodeWithOrientation, canvasAngle);
+            }
+        }
+
         private async void Initialize()
         {
             StatusTextBlock.Text = AppResources.MainPage_StatusTextBlock_StartingCamera;
