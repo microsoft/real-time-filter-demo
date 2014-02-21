@@ -87,6 +87,9 @@ https://github.com/nokia-developer/real-time-filter-demo/blob/master/Licence.txt
 6. Version history
 -------------------------------------------------------------------------------
 
+* 1.2.0.0: Fourth public release of Real-time Filter Demo
+  - Updated to the latest Nokia Imaging SDK version 1.1.177
+
 * 1.1.0.0: Third public release of Real-time Filter Demo
   - Updated to use the latest Nokia Imaging SDK
   - Added custom made inverted grayscale filter
