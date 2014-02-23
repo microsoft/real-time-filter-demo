@@ -60,6 +60,8 @@ namespace RealtimeFilterDemo
         {
             if (_semaphore.WaitOne(500))
             {
+                _cameraPreviewImageSource.InvalidateLoad();
+
                 var scanlineByteSize = (uint)frameSize.Width * 4; // 4 bytes per pixel in BGRA888 mode
                 var bitmap = new Bitmap(frameSize, ColorMode.Bgra8888, scanlineByteSize, frameBuffer);
 
