@@ -33,12 +33,22 @@ the instances of the two other key classes: `CameraStreamSource` and
 `MediaStreamSource`, provides the camera data. The `NokiaImageEditingSDKEffects`
 implements all the effects of the application. 
 
+Windows version has all the camera related functionality in the `MainPage` class, 
+in the MainPage.Camera.cs file. Windows version uses `CameraPreviewImageSource` 
+instead of `CameraStreamSource` to get the preview images from the camera. The
+effects have been added to custom `FilterListObject` list, from where they are 
+created by reflection on the fly. This step is made to demonstrate how you can
+create the filters on demand, otherwise the developer could have just created 
+them directly and put to the list.
+
 
 3. Compatibility
 -------------------------------------------------------------------------------
 
 Windows Phone 8. Tested to work on Nokia Lumia 920 and Nokia Lumia 520.
 Developed with Microsoft Visual Studio Express for Windows Phone 2012.
+
+Windows 8.1. Tested on Lumia 2520 and Surface 2.
 
 
 3.2 Known Issues
@@ -50,8 +60,8 @@ None.
 4. Building, installing, and running the application
 -------------------------------------------------------------------------------
 
-4.1 Preparations
-----------------
+4.1 Preparations for Windows Phone
+----------------------------------
 
 Make sure you have the following installed:
 
@@ -75,6 +85,10 @@ error stating this in the Output panel in Visual Studio Express.
 
 For more information on deploying and testing applications see:
 http://msdn.microsoft.com/en-us/library/gg588378%28v=vs.92%29.aspx
+
+4.3 Preparations for Windows
+----------------------------
+
 
 
 5. License
