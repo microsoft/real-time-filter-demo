@@ -9,7 +9,7 @@ This example application is hosted in GitHub:
 https://github.com/nokia-developer/real-time-filter-demo
 
 For more information on implementation visit Nokia Lumia Developer's Library:
-http://developer.nokia.com/Resources/Library/Lumia/nokia-imaging-sdk/sample-projects/real-time-filter-demo.html
+http://developer.nokia.com/resources/library/Lumia/nokia-imaging-sdk/sample-projects/real-time-filter-demo.html
 
 
 1. Prerequisites
