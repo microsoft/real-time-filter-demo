@@ -14,12 +14,17 @@ http://developer.nokia.com/Resources/Library/Lumia/nokia-imaging-sdk/sample-proj
 
 1. Prerequisites
 -------------------------------------------------------------------------------
-
+For Windows Phone version
 * C# basics
 * Windows 8
 * Microsoft Visual Studio Express for Windows Phone 2012
 * Windows Phone 8 device
 
+For Windows version
+* C# basics
+* Windows 8.1
+* Microsoft Visual Studio 2013 Express for Windows Store
+* Windows 8.1 device with a webcam
 
 2. Project structure and implementation
 -------------------------------------------------------------------------------
@@ -88,7 +93,10 @@ http://msdn.microsoft.com/en-us/library/gg588378%28v=vs.92%29.aspx
 
 4.3 Preparations for Windows
 ----------------------------
+Make sure you have the following installed:
 
+* Windows 8.1
+* Nuget 2.7+
 
 
 5. License
