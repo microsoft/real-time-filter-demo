@@ -1,9 +1,11 @@
-﻿/*
- * Copyright © 2013 Nokia Corporation. All rights reserved.
- * Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation. 
+﻿/**
+ * Copyright (c) 2013 Nokia Corporation. All rights reserved.
+ *
+ * Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation.
  * Other product and company names mentioned herein may be trademarks
- * or trade names of their respective owners. 
- * See LICENSE.TXT for license information.
+ * or trade names of their respective owners.
+ *
+ * See the license text file for license information.
  */
 
 using System;
@@ -20,22 +22,23 @@ using Windows.Foundation;
 namespace RealtimeFilterDemo
 {
     /// <summary>
-    /// Filtered camera stream source for a media element. Feeds the media element with frames filtered with a ICameraEffect implementation.
+    /// Filtered camera stream source for a media element. Feeds the media
+    /// element with frames filtered with a ICameraEffect implementation.
     /// </summary>
     public class CameraStreamSource : MediaStreamSource
     {
         private readonly Dictionary<MediaSampleAttributeKeys, string> _emptyAttributes = new Dictionary<MediaSampleAttributeKeys, string>();
-        private MediaStreamDescription _videoStreamDescription = null;
-        private DispatcherTimer _frameRateTimer = null;
-        private MemoryStream _frameStream = null;
-        private ICameraEffect _cameraEffect = null;
-        private long _currentTime = 0;
-        private int _frameStreamOffset = 0;
-        private int _frameTime = 0;
-        private int _frameCount = 0;
+        private MediaStreamDescription _videoStreamDescription;
+        private DispatcherTimer _frameRateTimer;
+        private MemoryStream _frameStream;
+        private ICameraEffect _cameraEffect;
+        private long _currentTime;
+        private int _frameStreamOffset;
+        private int _frameTime;
+        private int _frameCount;
         private Size _frameSize = new Size(0, 0);
-        private int _frameBufferSize = 0;
-        private byte[] _frameBuffer = null;
+        private int _frameBufferSize;
+        private byte[] _frameBuffer;
 
         /// <summary>
         /// Occurs when rendering frame rate changes.
@@ -45,7 +48,7 @@ namespace RealtimeFilterDemo
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="_cameraEffect">Camera effect to use.</param>
+        /// <param name="cameraEffect">Camera effect to use.</param>
         /// <param name="size">Size of the media element where the stream is rendered to.</param>
         public CameraStreamSource(ICameraEffect cameraEffect, Size size)
         {
@@ -77,8 +80,7 @@ namespace RealtimeFilterDemo
 
             // Media stream descriptions
 
-            var mediaStreamDescriptions = new List<MediaStreamDescription>();
-            mediaStreamDescriptions.Add(_videoStreamDescription);
+            var mediaStreamDescriptions = new List<MediaStreamDescription> { _videoStreamDescription };
 
             // Media source attributes
 
@@ -124,13 +126,14 @@ namespace RealtimeFilterDemo
         }
 
         /// <summary>
-        /// Processes camera frameBuffer using the set effect and provides media element with a filtered frameBuffer.
+        /// Processes camera frame buffer using the set effect and provides
+        /// media element with a filtered frame buffer.
         /// </summary>
         protected override void GetSampleAsync(MediaStreamType mediaStreamType)
         {
             var task = _cameraEffect.GetNewFrameAndApplyEffect(_frameBuffer.AsBuffer(), _frameSize);
-           
-            // When asynchroneous call completes, proceed by reporting about the sample completion
+
+            // When asynchronous call completes, proceed by reporting about the sample completion
 
             task.ContinueWith((action) =>
             {
@@ -140,7 +143,9 @@ namespace RealtimeFilterDemo
                     _currentTime += _frameTime;
                     _frameCount++;
 
-                    var sample = new MediaStreamSample(_videoStreamDescription, _frameStream, _frameStreamOffset, _frameBufferSize, _currentTime, _emptyAttributes);
+                    var sample = new MediaStreamSample(
+                        _videoStreamDescription, _frameStream, _frameStreamOffset,
+                        _frameBufferSize, _currentTime, _emptyAttributes);
 
                     ReportGetSampleCompleted(sample);
                 }

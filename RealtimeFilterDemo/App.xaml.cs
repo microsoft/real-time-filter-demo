@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using RealtimeFilterDemo.Resources;
+using Windows.Phone.Media.Capture;
 
 namespace RealtimeFilterDemo
 {
@@ -17,6 +19,8 @@ namespace RealtimeFilterDemo
         /// <returns>The root frame of the Phone Application.</returns>
         public static PhoneApplicationFrame RootFrame { get; private set; }
 
+        public static PhotoCaptureDevice Camera { get; set; }
+        
         /// <summary>
         /// Constructor for the Application object.
         /// </summary>
@@ -60,6 +64,15 @@ namespace RealtimeFilterDemo
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
+            var resolution = PhotoCaptureDevice.GetAvailablePreviewResolutions(CameraSensorLocation.Back).Last();
+
+            var task = PhotoCaptureDevice.OpenAsync(CameraSensorLocation.Back, resolution).AsTask();
+
+            task.Wait();
+
+            Camera = task.Result;
+
+            Camera.SetPreviewResolutionAsync(resolution).AsTask().Wait();
         }
 
         // Code to execute when the application is activated (brought to foreground)

@@ -1,9 +1,11 @@
-﻿/*
- * Copyright © 2013 Nokia Corporation. All rights reserved.
- * Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation. 
+﻿/**
+ * Copyright (c) 2013 Nokia Corporation. All rights reserved.
+ *
+ * Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation.
  * Other product and company names mentioned herein may be trademarks
- * or trade names of their respective owners. 
- * See LICENSE.TXT for license information.
+ * or trade names of their respective owners.
+ *
+ * See the license text file for license information.
  */
 
 using Microsoft.Phone.Controls;
@@ -22,7 +24,6 @@ namespace RealtimeFilterDemo
     public partial class MainPage : PhoneApplicationPage
     {
         private MediaElement _mediaElement = null;
-        private PhotoCaptureDevice _photoCaptureDevice = null;
         private NokiaImagingSDKEffects _cameraEffect = null;
         private CameraStreamSource _cameraStreamSource = null;
         private Semaphore _cameraSemaphore = new Semaphore(1, 1);
@@ -33,20 +34,23 @@ namespace RealtimeFilterDemo
 
             ApplicationBar = new ApplicationBar();
 
-            var previousButton = new ApplicationBarIconButton(new Uri("/Assets/Icons/previous.png", UriKind.Relative));
-            previousButton.Text = AppResources.PreviousEffectButtonText;
+            var previousButton = new ApplicationBarIconButton(new Uri("/Assets/Icons/previous.png", UriKind.Relative))
+            {
+                Text = AppResources.PreviousEffectButtonText
+            };
             previousButton.Click += PreviousButton_Click;
 
             ApplicationBar.Buttons.Add(previousButton);
 
-            var nextButton = new ApplicationBarIconButton(new Uri("/Assets/Icons/next.png", UriKind.Relative));
-            nextButton.Text = AppResources.NextEffectButtonText;
+            var nextButton = new ApplicationBarIconButton(new Uri("/Assets/Icons/next.png", UriKind.Relative))
+            {
+                Text = AppResources.NextEffectButtonText
+            };
             nextButton.Click += NextButton_Click;
 
             ApplicationBar.Buttons.Add(nextButton);
 
-            var aboutMenuItem = new ApplicationBarMenuItem();
-            aboutMenuItem.Text = AppResources.AboutPageButtonText;
+            var aboutMenuItem = new ApplicationBarMenuItem {Text = AppResources.AboutPageButtonText};
             aboutMenuItem.Click += AboutMenuItem_Click;
 
             ApplicationBar.MenuItems.Add(aboutMenuItem);
@@ -56,39 +60,43 @@ namespace RealtimeFilterDemo
         {
             base.OnNavigatedTo(e);
 
-            Initialize();
+            if (App.Camera != null)
+            {
+                Initialize();
+            }
+            else
+            {
+                StatusTextBlock.Text = AppResources.MainPage_Status_InitializingCameraFailed;
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             base.OnNavigatedFrom(e);
 
-            while (!_cameraSemaphore.WaitOne(100));
-
             Uninitialize();
 
-            _cameraSemaphore.Release();
         }
 
         protected override void OnOrientationChanged(OrientationChangedEventArgs e)
         {
             base.OnOrientationChanged(e);
 
-            if (_photoCaptureDevice != null)
+            if (App.Camera != null)
             {
                 double canvasAngle;
 
                 if (Orientation.HasFlag(PageOrientation.LandscapeLeft))
                 {
-                    canvasAngle = _photoCaptureDevice.SensorRotationInDegrees - 90;
+                    canvasAngle = App.Camera.SensorRotationInDegrees - 90;
                 }
                 else if (Orientation.HasFlag(PageOrientation.LandscapeRight))
                 {
-                    canvasAngle = _photoCaptureDevice.SensorRotationInDegrees + 90;
+                    canvasAngle = App.Camera.SensorRotationInDegrees + 90;
                 }
                 else // PageOrientation.PortraitUp
                 {
-                    canvasAngle = _photoCaptureDevice.SensorRotationInDegrees;
+                    canvasAngle = App.Camera.SensorRotationInDegrees;
                 }
 
                 BackgroundVideoBrush.RelativeTransform = new RotateTransform()
@@ -98,7 +106,7 @@ namespace RealtimeFilterDemo
                     Angle = canvasAngle
                 };
 
-                _photoCaptureDevice.SetProperty(KnownCameraGeneralProperties.EncodeWithOrientation, canvasAngle);
+                App.Camera.SetProperty(KnownCameraGeneralProperties.EncodeWithOrientation, canvasAngle);
             }
         }
 
@@ -106,21 +114,12 @@ namespace RealtimeFilterDemo
         {
             StatusTextBlock.Text = AppResources.MainPage_StatusTextBlock_StartingCamera;
 
-            var resolution = PhotoCaptureDevice.GetAvailablePreviewResolutions(CameraSensorLocation.Back).Last();
-
-            _photoCaptureDevice = await PhotoCaptureDevice.OpenAsync(CameraSensorLocation.Back, resolution);
-
-            await _photoCaptureDevice.SetPreviewResolutionAsync(resolution);
-
-            _cameraEffect = new NokiaImagingSDKEffects();
-            _cameraEffect.PhotoCaptureDevice = _photoCaptureDevice;
-
-            _cameraStreamSource = new CameraStreamSource(_cameraEffect, resolution);
+            _cameraEffect = new NokiaImagingSDKEffects() {PhotoCaptureDevice = App.Camera};
+            
+            _cameraStreamSource = new CameraStreamSource(_cameraEffect, App.Camera.CaptureResolution);
             _cameraStreamSource.FrameRateChanged += CameraStreamSource_FPSChanged;
 
-            _mediaElement = new MediaElement();
-            _mediaElement.Stretch = Stretch.UniformToFill;
-            _mediaElement.BufferingTime = new TimeSpan(0);
+            _mediaElement = new MediaElement {Stretch = Stretch.UniformToFill, BufferingTime = new TimeSpan(0)};
             _mediaElement.SetSource(_cameraStreamSource);
 
             // Using VideoBrush in XAML instead of MediaElement, because otherwise
@@ -148,12 +147,6 @@ namespace RealtimeFilterDemo
             }
 
             _cameraEffect = null;
-
-            if (_photoCaptureDevice != null)
-            {
-                _photoCaptureDevice.Dispose();
-                _photoCaptureDevice = null;
-            }
         }
 
         private void AboutMenuItem_Click(object sender, EventArgs e)
@@ -184,7 +177,7 @@ namespace RealtimeFilterDemo
         {
             if (_cameraSemaphore.WaitOne(100))
             {
-                await _photoCaptureDevice.FocusAsync();
+                await App.Camera.FocusAsync();
 
                 _cameraSemaphore.Release();
             }

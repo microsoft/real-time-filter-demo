@@ -191,4 +191,7 @@
   <data name="Filter_Custom" xml:space="preserve">
     <value>Inverse Weighted Grayscale</value>
   </data>
+  <data name="MainPage_Status_InitializingCameraFailed" xml:space="preserve">
+    <value>Initializing camera failed, try restarting the application</value>
+  </data>
 </root>
