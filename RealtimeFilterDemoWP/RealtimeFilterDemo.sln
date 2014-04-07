@@ -5,8 +5,6 @@ VisualStudioVersion = 12.0.30312.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealtimeFilterDemo", "RealtimeFilterDemo\RealtimeFilterDemo.csproj", "{71061D7F-C8D1-42C0-822A-89C1296E0FBA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealtimeFilterDemoWindows", "RealtimeFilterDemoWindows\RealtimeFilterDemoWindows.csproj", "{C66469DD-25CE-4DAE-BD94-EAA9FEB7717D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -31,24 +29,6 @@ Global
 		{71061D7F-C8D1-42C0-822A-89C1296E0FBA}.Release|x86.ActiveCfg = Release|x86
 		{71061D7F-C8D1-42C0-822A-89C1296E0FBA}.Release|x86.Build.0 = Release|x86
 		{71061D7F-C8D1-42C0-822A-89C1296E0FBA}.Release|x86.Deploy.0 = Release|x86
-		{C66469DD-25CE-4DAE-BD94-EAA9FEB7717D}.Debug|ARM.ActiveCfg = Debug|ARM
-		{C66469DD-25CE-4DAE-BD94-EAA9FEB7717D}.Debug|ARM.Build.0 = Debug|ARM
-		{C66469DD-25CE-4DAE-BD94-EAA9FEB7717D}.Debug|ARM.Deploy.0 = Debug|ARM
-		{C66469DD-25CE-4DAE-BD94-EAA9FEB7717D}.Debug|x64.ActiveCfg = Debug|x64
-		{C66469DD-25CE-4DAE-BD94-EAA9FEB7717D}.Debug|x64.Build.0 = Debug|x64
-		{C66469DD-25CE-4DAE-BD94-EAA9FEB7717D}.Debug|x64.Deploy.0 = Debug|x64
-		{C66469DD-25CE-4DAE-BD94-EAA9FEB7717D}.Debug|x86.ActiveCfg = Debug|x86
-		{C66469DD-25CE-4DAE-BD94-EAA9FEB7717D}.Debug|x86.Build.0 = Debug|x86
-		{C66469DD-25CE-4DAE-BD94-EAA9FEB7717D}.Debug|x86.Deploy.0 = Debug|x86
-		{C66469DD-25CE-4DAE-BD94-EAA9FEB7717D}.Release|ARM.ActiveCfg = Release|ARM
-		{C66469DD-25CE-4DAE-BD94-EAA9FEB7717D}.Release|ARM.Build.0 = Release|ARM
-		{C66469DD-25CE-4DAE-BD94-EAA9FEB7717D}.Release|ARM.Deploy.0 = Release|ARM
-		{C66469DD-25CE-4DAE-BD94-EAA9FEB7717D}.Release|x64.ActiveCfg = Release|x64
-		{C66469DD-25CE-4DAE-BD94-EAA9FEB7717D}.Release|x64.Build.0 = Release|x64
-		{C66469DD-25CE-4DAE-BD94-EAA9FEB7717D}.Release|x64.Deploy.0 = Release|x64
-		{C66469DD-25CE-4DAE-BD94-EAA9FEB7717D}.Release|x86.ActiveCfg = Release|x86
-		{C66469DD-25CE-4DAE-BD94-EAA9FEB7717D}.Release|x86.Build.0 = Release|x86
-		{C66469DD-25CE-4DAE-BD94-EAA9FEB7717D}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

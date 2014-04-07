@@ -107,7 +107,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Help\Nokia Imaging SDK.chm" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
