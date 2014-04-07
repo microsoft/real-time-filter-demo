@@ -1,17 +1,17 @@
-﻿using RealTimeFilterDemoWindows.Common;
+﻿/*
+ * Copyright (c) 2014 Nokia Corporation. All rights reserved.
+ *
+ * Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation.
+ * Other product and company names mentioned herein may be trademarks
+ * or trade names of their respective owners.
+ *
+ * See the license text file for license information.
+ */
+using RealTimeFilterDemoWindows.Common;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace RealTimeFilterDemoWindows
@@ -47,12 +47,14 @@ namespace RealTimeFilterDemoWindows
         public MainPage()
         {
             InitializeComponent();
+
             navigationHelper = new NavigationHelper(this);
             navigationHelper.LoadState += navigationHelper_LoadState;
             navigationHelper.SaveState += navigationHelper_SaveState;
+
             Window.Current.VisibilityChanged += Current_VisibilityChanged;
 
-            CreateCamera();
+            InitializeAsync();
         }
 
         /// <summary>
@@ -60,15 +62,16 @@ namespace RealTimeFilterDemoWindows
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        async void Current_VisibilityChanged(object sender, Windows.UI.Core.VisibilityChangedEventArgs e)
+        private async void Current_VisibilityChanged(object sender, Windows.UI.Core.VisibilityChangedEventArgs e)
         {
             try
             {
-                if (_loaded)
+                if (_initialized)
                 {
                     if (e.Visible)
                     {
-                        Initialize();
+                        await _cameraPreviewImageSource.InitializeAsync(string.Empty);
+                        await _cameraPreviewImageSource.StartPreviewAsync();
                     }
                     else
                     {
@@ -76,11 +79,14 @@ namespace RealTimeFilterDemoWindows
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine(ex.Message);
+            }
         }
 
         /// <summary>
-        /// Next -button was pressed
+        /// Next button was pressed
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -94,7 +100,7 @@ namespace RealTimeFilterDemoWindows
         }
 
         /// <summary>
-        /// Previous -button was pressed
+        /// Previous button was pressed
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -106,6 +112,14 @@ namespace RealTimeFilterDemoWindows
                 _changeFilterRequest = true;
             }
         }
+
+        private void OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+            TopAppBar.IsOpen = !TopAppBar.IsOpen;
+            BottomAppBar.IsOpen = TopAppBar.IsOpen;
+        }
+
+        #region Saving and loading state
 
         /// <summary>
         /// Populates the page with content passed during navigation. Any saved state is also
@@ -137,8 +151,9 @@ namespace RealTimeFilterDemoWindows
         private void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
             e.PageState["filter"] = _index;
-            _cameraPreviewImageSource.StopPreviewAsync();
         }
+
+        #endregion
 
         #region NavigationHelper registration
 
@@ -154,8 +169,6 @@ namespace RealTimeFilterDemoWindows
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             navigationHelper.OnNavigatedTo(e);
-            _loaded = true;
-            
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

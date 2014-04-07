@@ -7,8 +7,8 @@
     <ProjectGuid>{C66469DD-25CE-4DAE-BD94-EAA9FEB7717D}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RealTimeFilterDemoWindows</RootNamespace>
-    <AssemblyName>RealTimeFilterDemoWindows</AssemblyName>
+    <RootNamespace>RealtimeFilterDemoWindows</RootNamespace>
+    <AssemblyName>RealtimeFilterDemoWindows</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
@@ -96,7 +96,7 @@
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\RelayCommand.cs" />
     <Compile Include="Common\SuspensionManager.cs" />
-    <Compile Include="FilterListObject.cs" />
+    <Compile Include="Filter.cs" />
     <Compile Include="MainPage.Camera.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
