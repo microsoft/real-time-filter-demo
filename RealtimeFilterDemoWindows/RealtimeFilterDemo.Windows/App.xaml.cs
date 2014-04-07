@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RealtimeFilterDemo;
+using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
@@ -7,7 +8,7 @@ using Windows.UI.Xaml.Navigation;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
-namespace RealTimeFilterDemoWindows
+namespace RealtimeFilterDemo
 {
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
@@ -47,7 +48,7 @@ namespace RealTimeFilterDemoWindows
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
-                RealTimeFilterDemoWindows.Common.SuspensionManager.RegisterFrame(rootFrame, "RTFilter");
+                RealtimeFilterDemo.Common.SuspensionManager.RegisterFrame(rootFrame, "RTFilter");
 
                 // Set the default language
                 rootFrame.Language = Windows.Globalization.ApplicationLanguages.Languages[0];
@@ -56,7 +57,7 @@ namespace RealTimeFilterDemoWindows
 
                 if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
                 {
-                    await RealTimeFilterDemoWindows.Common.SuspensionManager.RestoreAsync();
+                    await RealtimeFilterDemo.Common.SuspensionManager.RestoreAsync();
                 }
 
 
@@ -95,7 +96,7 @@ namespace RealTimeFilterDemoWindows
         private async void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            await RealTimeFilterDemoWindows.Common.SuspensionManager.SaveAsync();
+            await RealtimeFilterDemo.Common.SuspensionManager.SaveAsync();
             deferral.Complete();
         }
     }

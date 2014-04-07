@@ -10,7 +10,7 @@
     
 <Page
     x:Name="pageRoot"
-    x:Class="RealTimeFilterDemoWindows.MainPage"
+    x:Class="RealtimeFilterDemo.MainPage"
     DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -21,7 +21,7 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Tapped="OnTapped">
-        <Image x:Name="CaptureImage" VerticalAlignment="Center" Stretch="UniformToFill"/>
+        <Image x:Name="CaptureImage" VerticalAlignment="Center" Stretch="UniformToFill" Source="{Binding PreviewBitmap}"/>
     </Grid>
     
     <Page.TopAppBar>
@@ -32,10 +32,10 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="REAL-TIME FILTER DEMO" Style="{StaticResource TitleTextBlockStyle}"
+                <TextBlock Text="REALTIME FILTER DEMO" Style="{StaticResource TitleTextBlockStyle}"
                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
-                <TextBlock x:Name="StatusTextBlock" Style="{StaticResource TitleTextBlockStyle}"
+                <TextBlock Text="{Binding Status}" Style="{StaticResource TitleTextBlockStyle}"
                            Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center"/>
             </Grid>
         </AppBar>
@@ -43,8 +43,8 @@
     
     <Page.BottomAppBar>
         <CommandBar IsOpen="True" IsSticky="True">
-            <AppBarButton Label="Previous" Icon="Previous" Click="OnPreviousEffect"/>
-            <AppBarButton Label="Next" Icon="Next" Click="OnNextEffect" />
+            <AppBarButton Label="Previous" Icon="Previous" Command="{Binding PreviousFilterCommand}"/>
+            <AppBarButton Label="Next" Icon="Next" Command="{Binding NextFilterCommand}"/>
         </CommandBar>
     </Page.BottomAppBar>
 </Page>

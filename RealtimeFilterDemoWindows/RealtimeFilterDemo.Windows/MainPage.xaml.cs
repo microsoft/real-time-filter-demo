@@ -7,14 +7,15 @@
  *
  * See the license text file for license information.
  */
-using RealTimeFilterDemoWindows.Common;
+using RealtimeFilterDemo.Common;
 using System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
-namespace RealTimeFilterDemoWindows
+namespace RealtimeFilterDemo
 {
     /// <summary>
     /// This partial class has the navigation logic, see MainPage.Camera.cs for Imaging SDK functionality
@@ -22,12 +23,12 @@ namespace RealTimeFilterDemoWindows
     public sealed partial class MainPage : Page
     {
         private NavigationHelper navigationHelper;
-        private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        private MainPageViewModel defaultViewModel = new MainPageViewModel();
 
         /// <summary>
         /// This can be changed to a strongly typed view model.
         /// </summary>
-        public ObservableDictionary DefaultViewModel
+        public MainPageViewModel DefaultViewModel
         {
             get { return this.defaultViewModel; }
         }
@@ -53,8 +54,6 @@ namespace RealTimeFilterDemoWindows
             navigationHelper.SaveState += navigationHelper_SaveState;
 
             Window.Current.VisibilityChanged += Current_VisibilityChanged;
-
-            InitializeAsync();
         }
 
         /// <summary>
@@ -66,50 +65,18 @@ namespace RealTimeFilterDemoWindows
         {
             try
             {
-                if (_initialized)
+                if (e.Visible)
                 {
-                    if (e.Visible)
-                    {
-                        await _cameraPreviewImageSource.InitializeAsync(string.Empty);
-                        await _cameraPreviewImageSource.StartPreviewAsync();
-                    }
-                    else
-                    {
-                        await _cameraPreviewImageSource.StopPreviewAsync();
-                    }
+                    await defaultViewModel.ResumePreviewAsync();
+                }
+                else
+                {
+                    await defaultViewModel.PausePreviewAsync();
                 }
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Next button was pressed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnNextEffect(object sender, RoutedEventArgs e)
-        {
-            if (_index < _filterList.Count - 1)
-            {
-                _index++;
-                _changeFilterRequest = true;
-            }
-        }
-
-        /// <summary>
-        /// Previous button was pressed
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnPreviousEffect(object sender, RoutedEventArgs e)
-        {
-            if (_index > 0)
-            {
-                _index--;
-                _changeFilterRequest = true;
             }
         }
 
@@ -136,7 +103,10 @@ namespace RealTimeFilterDemoWindows
         {
             if (e.PageState != null && e.PageState.ContainsKey("filter"))
             {
-                int.TryParse(e.PageState["filter"].ToString(), out _index);
+                int filterIndex = 0;
+                int.TryParse(e.PageState["FilterIndex"].ToString(), out filterIndex);
+
+                defaultViewModel.FilterIndex = filterIndex;
             }
         }
 
@@ -150,7 +120,7 @@ namespace RealTimeFilterDemoWindows
         /// serializable state.</param>
         private void navigationHelper_SaveState(object sender, SaveStateEventArgs e)
         {
-            e.PageState["filter"] = _index;
+            e.PageState["FilterIndex"] = defaultViewModel.FilterIndex;
         }
 
         #endregion
@@ -166,9 +136,14 @@ namespace RealTimeFilterDemoWindows
         /// The navigation parameter is available in the LoadState method 
         /// in addition to page state preserved during an earlier session.
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
             navigationHelper.OnNavigatedTo(e);
+
+            if (!defaultViewModel.Initialized)
+            {
+                await defaultViewModel.InitializeAsync();
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)

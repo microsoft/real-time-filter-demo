@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
-namespace RealTimeFilterDemoWindows.Common
+namespace RealtimeFilterDemo.Common
 {
     public class BasicPage : Page
     {
