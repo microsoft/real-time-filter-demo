@@ -19,7 +19,7 @@ License
 -------
 
 See the license text file delivered with this project:
-https://github.com/nokia-developer/real-time-filter-demo/blob/master/License.txt
+https://github.com/nokia-developer/real-time-filter-demo/blob/master/Licence.txt
 
 <!--
 Downloads
