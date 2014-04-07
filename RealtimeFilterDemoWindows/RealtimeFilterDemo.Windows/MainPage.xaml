@@ -32,7 +32,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="REALTIME FILTER DEMO" Style="{StaticResource TitleTextBlockStyle}"
+                <TextBlock Text="REAL-TIME FILTER DEMO" Style="{StaticResource TitleTextBlockStyle}"
                            HorizontalAlignment="Left" VerticalAlignment="Center"/>
 
                 <TextBlock Text="{Binding Status}" Style="{StaticResource TitleTextBlockStyle}"

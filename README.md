@@ -1,4 +1,4 @@
-Realtime Filter Demo
+Real-time Filter Demo
 =====================
 
 A Nokia example application demonstrating the use of the Nokia Imaging SDK for
@@ -9,8 +9,8 @@ This repository contains two separate implementation solutions:
 
 | Folder | Description |
 | ------ | ----------- |
-| [RealtimeFilterDemoWP](https://github.com/nokia-developer/real-time-filter-demo/tree/master/RealtimeFilterDemoWP) | Realtime Filter Demo for Windows Phone 8 |
-| [RealtimeFilterDemoWindows](https://github.com/nokia-developer/real-time-filter-demo/tree/master/RealtimeFilterDemoWindows) | Realtime Filter Demo for Windows and Windows Phone 8.1 |
+| [RealtimeFilterDemoWP](https://github.com/nokia-developer/real-time-filter-demo/tree/master/RealtimeFilterDemoWP) | Real-time Filter Demo for Windows Phone 8 |
+| [RealtimeFilterDemoWindows](https://github.com/nokia-developer/real-time-filter-demo/tree/master/RealtimeFilterDemoWindows) | Real-time Filter Demo for Windows and Windows Phone 8.1 |
 
 These example applications are hosted in GitHub:
 https://github.com/nokia-developer/real-time-filter-demo/
@@ -27,5 +27,5 @@ Downloads
 
 | Project | Release | Download |
 | ------- | --------| -------- |
-| Realtime Filter Demo WP8, Windows, WP8.1 | v2.0 | [real-time-filter-demo-2.0.zip](https://github.com/nokia-developer/real-time-filter-demo/archive/v2.0.zip) |
+| Real-time Filter Demo WP8, Windows, WP8.1 | v2.0 | [real-time-filter-demo-2.0.zip](https://github.com/nokia-developer/real-time-filter-demo/archive/v2.0.zip) |
 -->
