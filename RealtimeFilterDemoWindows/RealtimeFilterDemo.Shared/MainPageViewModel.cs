@@ -27,7 +27,7 @@ namespace RealtimeFilterDemo
         // List of filters and their constructors used in this demo
         private readonly List<Filter> _filterList = new List<Filter>
         {
-            new Filter { Name = "No filter", Type = null},
+            new Filter { Name = "No Filter", Type = null},
             new Filter { Name = "Lomo", Type = typeof(LomoFilter), Parameters = new object[]{0.7, 0.4, LomoVignetting.High, LomoStyle.Yellow}},
             new Filter { Name = "Magic Pen", Type = typeof(MagicPenFilter)},
             new Filter { Name = "Grayscale", Type = typeof(GrayscaleFilter)},
@@ -36,7 +36,7 @@ namespace RealtimeFilterDemo
             new Filter { Name = "Cartoon", Type = typeof(CartoonFilter), Parameters = new object[]{true}},
             new Filter { Name = "Sepia", Type = typeof(SepiaFilter)},
             new Filter { Name = "Sharpness", Type = typeof(SharpnessFilter), Parameters = new object[]{7}},
-            new Filter { Name = "AutoEnhance", Type = typeof(AutoEnhanceFilter), Parameters = new object[]{true, true}}
+            new Filter { Name = "Auto Enhance", Type = typeof(AutoEnhanceFilter), Parameters = new object[]{true, true}}
         };
 
         private string _status;
