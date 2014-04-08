@@ -107,9 +107,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml">
       <SubType>Designer</SubType>
     </None>
@@ -148,8 +146,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Nokia.Graphics.Imaging.Managed">
-      <HintPath>..\packages\NokiaImagingSDK.1.1.177\lib\wp8\Nokia.Graphics.Imaging.Managed.dll</HintPath>
+    <Reference Include="Nokia.Graphics.Imaging.Managed, Version=1.2.99.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NokiaImagingSDK.1.2.99\lib\wp8\Nokia.Graphics.Imaging.Managed.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
@@ -163,11 +162,11 @@
   -->
   <ProjectExtensions />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Import Project="..\packages\NokiaImagingSDK.1.1.177\build\wp8\NokiaImagingSDK.targets" Condition="Exists('..\packages\NokiaImagingSDK.1.1.177\build\wp8\NokiaImagingSDK.targets')" />
+  <Import Project="..\packages\NokiaImagingSDK.1.2.99\build\wp8\NokiaImagingSDK.targets" Condition="Exists('..\packages\NokiaImagingSDK.1.2.99\build\wp8\NokiaImagingSDK.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\NokiaImagingSDK.1.1.177\build\wp8\NokiaImagingSDK.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NokiaImagingSDK.1.1.177\build\wp8\NokiaImagingSDK.targets'))" />
+    <Error Condition="!Exists('..\packages\NokiaImagingSDK.1.2.99\build\wp8\NokiaImagingSDK.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NokiaImagingSDK.1.2.99\build\wp8\NokiaImagingSDK.targets'))" />
   </Target>
 </Project>
