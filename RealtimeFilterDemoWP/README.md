@@ -1,86 +1,46 @@
-Real-time Filter Demo
-=====================
+Filter Explorer for Windows Phone 8
+===================================
 
-A Nokia example application demonstrating the use of the Nokia Imaging SDK for
-real-time image effects. The effects are applied to the stream received from the
-camera and shown in the viewfinder. This app does not support capturing photos. 
+Filter Explorer application demonstrates some of the image editing capabilities
+and performance of the Nokia Imaging SDK by allowing you to apply a number of
+filter layers to existing or newly captured photos.
 
 This example application is hosted in GitHub:
-https://github.com/nokia-developer/real-time-filter-demo
+https://github.com/nokia-developer/filter-explorer
 
-For more information on implementation visit Nokia Lumia Developer's Library:
-http://developer.nokia.com/resources/library/Lumia/nokia-imaging-sdk/sample-projects/real-time-filter-demo.html
-
-
-1. Prerequisites
--------------------------------------------------------------------------------
-For Windows Phone version
-* C# basics
-* Windows 8
-* Microsoft Visual Studio Express for Windows Phone 2012
-* Windows Phone 8 device
-
-For Windows version
-* C# basics
-* Windows 8.1
-* Microsoft Visual Studio 2013 Express for Windows Store
-* Windows 8.1 device with a webcam
-
-2. Project structure and implementation
--------------------------------------------------------------------------------
-
-The example consists basically of three key classes. The main page is your
-typical phone application page implemented by a XAML file and a C# counterpart.
-The main page implements the application UI including the `MediaElement` which
-displays the camera viewfinder with an effect. The `MainPage` class also owns
-the instances of the two other key classes: `CameraStreamSource` and
-`NokiaImageEditingSDKEffects`. The `CameraStreamSource`, derived from
-`MediaStreamSource`, provides the camera data. The `NokiaImageEditingSDKEffects`
-implements all the effects of the application. 
-
-Windows version has all the camera related functionality in the `MainPage` class, 
-in the MainPage.Camera.cs file. Windows version uses `CameraPreviewImageSource` 
-instead of `CameraStreamSource` to get the preview images from the camera. The
-effects have been added to custom `FilterListObject` list, from where they are 
-created by reflection on the fly. This step is made to demonstrate how you can
-create the filters on demand, otherwise the developer could have just created 
-them directly and put to the list.
-
-
-3. Compatibility
--------------------------------------------------------------------------------
-
-Windows Phone 8. Tested to work on Nokia Lumia 920 and Nokia Lumia 520.
 Developed with Microsoft Visual Studio Express for Windows Phone 2012.
 
-Windows 8.1. Tested on Lumia 2520 and Surface 2.
+Compatible with:
+
+ * Windows Phone 8
+
+Tested to work on:
+
+ * Nokia Lumia 520
+ * Nokia Lumia 620
+ * Nokia Lumia 820
+ * Nokia Lumia 920
+
+For more information on implementation, visit Nokia Lumia
+Developer's Library:
+http://developer.nokia.com/resources/library/Lumia/nokia-imaging-sdk/sample-projects/filter-explorer.html
 
 
-3.2 Known Issues
-----------------
-
-None.
-
-
-4. Building, installing, and running the application
--------------------------------------------------------------------------------
-
-4.1 Preparations for Windows Phone
-----------------------------------
+Instructions
+------------
 
 Make sure you have the following installed:
 
-* Windows 8
-* Windows Phone SDK 8.0
-* Nuget 2.7+
+ * Windows 8
+ * Visual Studio Express 2012 for Windows Phone
+ * Nuget 2.7 or later
 
-4.2 Using the WINDOWS PHONE 8 SDK
----------------------------------
+To build and run the sample in emulator
 
 1. Open the SLN file:
    File > Open Project, select the solution (.sln postfix) file
-2. Select the target 'Device' and platform 'ARM'.
-3. Press F5 to build the project and run it on device.
+2. Select the target 'Emulator' and platform 'x86'.
+3. Press F5 to build the project and run it.
 
 If the project does not compile on the first attempt it's possible that you
 did not have the required packages yet. With Nuget 2.7 or later the missing
@@ -89,36 +49,64 @@ building again. If some packages cannot be found there should be an
 error stating this in the Output panel in Visual Studio Express.
 
 For more information on deploying and testing applications see:
-http://msdn.microsoft.com/en-us/library/gg588378%28v=vs.92%29.aspx
-
-4.3 Preparations for Windows
-----------------------------
-Make sure you have the following installed:
-
-* Windows 8.1
-* Nuget 2.7+
+http://msdn.microsoft.com/library/windowsphone/develop/ff402565(v=vs.105).aspx
 
 
-5. License
--------------------------------------------------------------------------------
+About the implementation
+------------------------
 
-See the license text file
-https://github.com/nokia-developer/real-time-filter-demo/blob/master/Licence.txt
+| Folder | Description |
+| ------ | ----------- |
+| / | Contains the project file, the license information and this file (README.md) |
+| ImageProcessingApp | Root folder for the implementation files.  |
+| ImageProcessingApp/Assets | Graphic assets like icons and tiles. |
+| ImageProcessingApp/Controls | Custom UI controls. |
+| ImageProcessingApp/Converters | Utilities to convert various data types in XAML. |
+| ImageProcessingApp/Helpers | Rendering, tombstorning, etc. helpers. |
+| ImageProcessingApp/Models | Application model. |
+| ImageProcessingApp/Pages | XAML pages. |
+| ImageProcessingApp/Properties | Application property files. |
+| ImageProcessingApp/Resources | Application resources. |
+
+Important classes:
+
+| File | Description |
+| ---- | ----------- |
+| Helpers.StreamRenderingHelper | Helper utilities for fast photo stream rendering. |
+| Models.FilterModel | Different individual filters. |
+| Models.PhotoModel | Main model class including photo data, editing session and rendering functions. |
+| Pages.FilterPage | Filter selection page. |
+| Pages.PhotoPage | Main selected photo display/editing page. |
+| Pages.StreamPage | Startup page, displays Camera Roll photos rendered with randomly applied filters. |
 
 
-6. Version history
--------------------------------------------------------------------------------
+Known issues
+------------
 
-* 1.2.0.0: Fourth public release of Real-time Filter Demo
-  - Updated to the latest Nokia Imaging SDK version 1.1.177
+None.
 
-* 1.1.0.0: Third public release of Real-time Filter Demo
-  - Updated to use the latest Nokia Imaging SDK
-  - Added custom made inverted grayscale filter
-  - Using Nuget Package Restore for external libraries
-  - Overall code refactoring and productization
 
-* 1.0.1.0: Second public release of Real-time Filter Demo
-  - Fix: MediaElement did not release the camera handle
+License
+-------
+
+See the license text file delivered with this project:
+https://github.com/nokia-developer/filter-explorer/blob/master/License.txt
+
+
+Version history
+---------------
+
+ * 2.0: Fifth public release of Filter Explorer
+   - Updated to latest Nokia Imaging SDK
+
+ * 1.3: Fourth public release of Filter Explorer
+   - Updated to the latest Nokia Imaging SDK
+
+ * 1.2: Third public release of Filter Explorer
+   - Updated to use the latest Nokia Imaging SDK
+   - Using Nuget Package Restore for external libraries
+
+ * 1.1: Second public release of Filter Explorer
+   - Updated looks: new green theme
   
-* 1.0.0.0: First public release of Real-time Filter Demo
+ * 1.0: First public release of Filter Explorer
