@@ -21,11 +21,10 @@ License
 See the license text file delivered with this project:
 https://github.com/nokia-developer/real-time-filter-demo/blob/master/Licence.txt
 
-<!--
+
 Downloads
 ---------
 
 | Project | Release | Download |
 | ------- | --------| -------- |
 | Real-time Filter Demo WP8, Windows, WP8.1 | v2.0 | [real-time-filter-demo-2.0.zip](https://github.com/nokia-developer/real-time-filter-demo/archive/v2.0.zip) |
--->
