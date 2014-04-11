@@ -245,8 +245,6 @@ namespace RealtimeFilterDemo
                 // Render the image with the filter
                 await _writeableBitmapRenderer.RenderAsync();
 
-                
-
                 await Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High,
                     () =>
                         {

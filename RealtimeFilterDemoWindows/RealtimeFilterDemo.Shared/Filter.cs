@@ -7,6 +7,7 @@
  *
  * See the license text file for license information.
  */
+
 namespace RealtimeFilterDemo
 {
     public class Filter

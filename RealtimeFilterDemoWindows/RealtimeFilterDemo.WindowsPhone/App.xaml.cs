@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
+﻿/*
+ * Copyright (c) 2014 Nokia Corporation. All rights reserved.
+ *
+ * Nokia and Nokia Connecting People are registered trademarks of Nokia Corporation.
+ * Other product and company names mentioned herein may be trademarks
+ * or trade names of their respective owners.
+ *
+ * See the license text file for license information.
+ */
+
+using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
