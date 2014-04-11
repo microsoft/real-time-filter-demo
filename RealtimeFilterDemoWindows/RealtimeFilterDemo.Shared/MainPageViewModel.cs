@@ -179,16 +179,24 @@ namespace RealtimeFilterDemo
         {
             Status = "Starting camera...";
 
+            // Create a camera preview image source (from Imaging SDK)
             _cameraPreviewImageSource = new CameraPreviewImageSource();
-            _cameraPreviewImageSource.PreviewFrameAvailable += OnPreviewFrameAvailable;
+            await _cameraPreviewImageSource.InitializeAsync(string.Empty);
+            var properties = await _cameraPreviewImageSource.StartPreviewAsync();
 
+            // Create a preview bitmap with the correct aspect ratio
+            var width = 640.0;
+            var height = (width / properties.Width) * properties.Height;
+            var bitmap = new WriteableBitmap((int)width, (int)height);
+
+            PreviewBitmap = bitmap;
+
+            // Create a filter effect to be used with the source (no filters yet)
             _effect = new FilterEffect(_cameraPreviewImageSource);
-
-            _writeableBitmap = new WriteableBitmap(640, 480);
             _writeableBitmapRenderer = new WriteableBitmapRenderer(_effect, _writeableBitmap);
 
-            await _cameraPreviewImageSource.InitializeAsync(string.Empty);
-            await _cameraPreviewImageSource.StartPreviewAsync();
+            // Attach preview frame delegate
+            _cameraPreviewImageSource.PreviewFrameAvailable += OnPreviewFrameAvailable;
 
             Status = _filterList[_index].Name;
 
@@ -220,7 +228,7 @@ namespace RealtimeFilterDemo
         private async void OnPreviewFrameAvailable(IImageSize args)
         {
             // Prevent multiple rendering attempts at once
-            if (!_isRendering)
+            if (Initialized && !_isRendering)
             {
                 _isRendering = true;
 
