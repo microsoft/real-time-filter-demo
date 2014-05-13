@@ -24,7 +24,7 @@ namespace RealtimeFilterDemo
     public partial class MainPage : PhoneApplicationPage
     {
         private MediaElement _mediaElement = null;
-        private NokiaImagingSDKEffects _cameraEffect = null;
+        private Effects _cameraEffect = null;
         private CameraStreamSource _cameraStreamSource = null;
         private Semaphore _cameraSemaphore = new Semaphore(1, 1);
 
@@ -114,7 +114,7 @@ namespace RealtimeFilterDemo
         {
             StatusTextBlock.Text = AppResources.MainPage_StatusTextBlock_StartingCamera;
 
-            _cameraEffect = new NokiaImagingSDKEffects() {PhotoCaptureDevice = App.Camera};
+            _cameraEffect = new Effects() {PhotoCaptureDevice = App.Camera};
             
             _cameraStreamSource = new CameraStreamSource(_cameraEffect, App.Camera.CaptureResolution);
             _cameraStreamSource.FrameRateChanged += CameraStreamSource_FPSChanged;

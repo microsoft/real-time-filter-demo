@@ -18,7 +18,7 @@ using Windows.Storage.Streams;
 
 namespace RealtimeFilterDemo
 {
-    public class NokiaImagingSDKEffects : ICameraEffect
+    public class Effects : ICameraEffect
     {
         private PhotoCaptureDevice _photoCaptureDevice = null;
         private CameraPreviewImageSource _cameraPreviewImageSource = null;
@@ -47,7 +47,7 @@ namespace RealtimeFilterDemo
             }
         }
 
-        ~NokiaImagingSDKEffects()
+        ~Effects()
         {
             while (!_semaphore.WaitOne(100));
 

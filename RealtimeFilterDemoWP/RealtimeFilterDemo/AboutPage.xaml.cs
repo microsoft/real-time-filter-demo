@@ -24,14 +24,18 @@ namespace RealtimeFilterDemo
 
             // Application version number
 
-            var version = XDocument.Load("WMAppManifest.xml").Root.Element("App").Attribute("Version").Value;
-
-            var versionRun = new Run()
+            var xElement = XDocument.Load("WMAppManifest.xml").Root;
+            if (xElement != null)
             {
-                Text = String.Format(AppResources.AboutPage_VersionRun_Text, version) + "\n"
-            };
+                var version = xElement.Element("App").Attribute("Version").Value;
 
-            VersionParagraph.Inlines.Add(versionRun);
+                var versionRun = new Run()
+                {
+                    Text = String.Format(AppResources.AboutPage_VersionRun_Text, version) + "\n"
+                };
+
+                VersionParagraph.Inlines.Add(versionRun);
+            }
 
             // Application about text
 
@@ -47,8 +51,7 @@ namespace RealtimeFilterDemo
             var projectRunText = AppResources.AboutPage_ProjectRun_Text;
             var projectRunTextSpans = projectRunText.Split(new string[] { "{0}" }, StringSplitOptions.None);
 
-            var projectRunSpan1 = new Run();
-            projectRunSpan1.Text = projectRunTextSpans[0];
+            var projectRunSpan1 = new Run {Text = projectRunTextSpans[0]};
 
             var projectsLink = new Hyperlink();
             projectsLink.Inlines.Add(AppResources.AboutPage_Hyperlink_Project);
@@ -56,8 +59,7 @@ namespace RealtimeFilterDemo
             projectsLink.Foreground = new SolidColorBrush((Color)App.Current.Resources["PhoneForegroundColor"]);
             projectsLink.MouseOverForeground = new SolidColorBrush((Color)App.Current.Resources["PhoneAccentColor"]);
 
-            var projectRunSpan2 = new Run();
-            projectRunSpan2.Text = projectRunTextSpans[1] + "\n";
+            var projectRunSpan2 = new Run {Text = projectRunTextSpans[1] + "\n"};
 
             ProjectParagraph.Inlines.Add(projectRunSpan1);
             ProjectParagraph.Inlines.Add(projectsLink);
