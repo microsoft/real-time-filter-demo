@@ -14,8 +14,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Windows.Devices.Enumeration;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Media.Imaging;
+using System.Linq;
 
 namespace RealtimeFilterDemo
 {
@@ -180,8 +182,10 @@ namespace RealtimeFilterDemo
             Status = "Starting camera...";
 
             // Create a camera preview image source (from Imaging SDK)
+            DeviceInformationCollection devices = await Windows.Devices.Enumeration.DeviceInformation.FindAllAsync(Windows.Devices.Enumeration.DeviceClass.VideoCapture);
+            String backCameraId = devices.FirstOrDefault(x => x.EnclosureLocation != null && x.EnclosureLocation.Panel == Windows.Devices.Enumeration.Panel.Back).Id;
             _cameraPreviewImageSource = new CameraPreviewImageSource();
-            await _cameraPreviewImageSource.InitializeAsync(string.Empty);
+            await _cameraPreviewImageSource.InitializeAsync(backCameraId);
             var properties = await _cameraPreviewImageSource.StartPreviewAsync();
 
             // Create a preview bitmap with the correct aspect ratio
