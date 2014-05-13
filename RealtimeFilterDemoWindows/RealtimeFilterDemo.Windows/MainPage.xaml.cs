@@ -82,8 +82,15 @@ namespace RealtimeFilterDemo
 
         private void OnTapped(object sender, TappedRoutedEventArgs e)
         {
-            TopAppBar.IsOpen = !TopAppBar.IsOpen;
-            BottomAppBar.IsOpen = TopAppBar.IsOpen;
+            if (TopAppBar != null)
+            {
+                TopAppBar.IsOpen = !TopAppBar.IsOpen;
+
+                if (BottomAppBar != null)
+                {
+                    BottomAppBar.IsOpen = TopAppBar.IsOpen;
+                }
+            }
         }
 
         #region Saving and loading state
