@@ -6,7 +6,7 @@ real-time image effects. The effects are applied to the stream received from the
 camera and shown in the viewfinder. This app does not support capturing photos. 
 
 This example application is hosted in GitHub:
-https://github.com/nokia-developer/real-time-filter-demo/
+https://github.com/Microsoft/real-time-filter-demo/
 
 Developed with Microsoft Visual Studio Express 2013 for Windows.
 
@@ -99,7 +99,7 @@ License
 -------
 
 See the license text file delivered with this project:
-https://github.com/nokia-developer/real-time-filter-demo/blob/master/Licence.txt
+https://github.com/Microsoft/real-time-filter-demo/blob/master/Licence.txt
 
 
 Version history

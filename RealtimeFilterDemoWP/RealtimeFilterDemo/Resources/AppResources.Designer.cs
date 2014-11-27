@@ -61,7 +61,7 @@ namespace RealtimeFilterDemo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This is a Nokia example application demonstrating the real-time use of effects provided by the Nokia Imaging SDK. The effects are applies to the stream of images received from the camera device..
+        ///   Looks up a localized string similar to This is a example application demonstrating the real-time use of effects provided by the Nokia Imaging SDK. The effects are applies to the stream of images received from the camera device..
         /// </summary>
         public static string AboutPage_AboutRun_Text {
             get {
@@ -70,7 +70,7 @@ namespace RealtimeFilterDemo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to http://www.github.com/nokia-developer/real-time-filter-demo/.
+        ///   Looks up a localized string similar to http://www.github.com/Microsoft/real-time-filter-demo/.
         /// </summary>
         public static string AboutPage_Hyperlink_Project {
             get {

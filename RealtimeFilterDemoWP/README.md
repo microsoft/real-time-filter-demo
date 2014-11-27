@@ -6,7 +6,7 @@ and performance of the Nokia Imaging SDK by allowing you to apply a number of
 filter layers to existing or newly captured photos.
 
 This example application is hosted in GitHub:
-https://github.com/nokia-developer/filter-explorer
+https://github.com/Microsoft/filter-explorer
 
 Developed with Microsoft Visual Studio Express for Windows Phone 2012.
 
@@ -90,7 +90,7 @@ License
 -------
 
 See the license text file delivered with this project:
-https://github.com/nokia-developer/filter-explorer/blob/master/License.txt
+https://github.com/Microsoft/filter-explorer/blob/master/License.txt
 
 
 Version history
