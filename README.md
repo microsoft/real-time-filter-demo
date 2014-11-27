@@ -1,7 +1,7 @@
 Real-time Filter Demo
 =====================
 
-A Nokia example application demonstrating the use of the Nokia Imaging SDK for
+An example application demonstrating the use of the Imaging SDK for
 real-time image effects. The effects are applied to the stream received from the
 camera and shown in the viewfinder. This app does not support capturing photos.
 
