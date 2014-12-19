@@ -1,7 +1,7 @@
 Real-time Filter Demo for Windows and Windows Phone 8.1
 =======================================================
 
-A Nokia example application demonstrating the use of the Nokia Imaging SDK for
+A Microsoft example application demonstrating the use of the Lumia Imaging SDK for
 real-time image effects. The effects are applied to the stream received from the
 camera and shown in the viewfinder. This app does not support capturing photos. 
 
@@ -20,8 +20,8 @@ Tested to work on:
  * Windows 8.1 x86 desktop
  * Windows Phone 8.1 emulator
 
-For more information on implementation, visit Nokia Lumia Developer's Library:
-http://developer.nokia.com/resources/library/Lumia/nokia-imaging-sdk/sample-projects/real-time-filter-demo.html
+For more information on implementation, visit Lumia Developer's Library:
+ http://dev.windows.com/en-us/featured/lumia
 
 
 Instructions

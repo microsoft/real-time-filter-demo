@@ -4,7 +4,7 @@
   <mp:PhoneIdentity PhoneProductId="07511871-03bd-4eb5-8b8f-66bc1d969b54" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>RealtimeFilterDemo.WindowsPhone</DisplayName>
-    <PublisherDisplayName>Nokia Developer</PublisherDisplayName>
+    <PublisherDisplayName>Lumia Developer</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Prerequisites>
