@@ -21,7 +21,8 @@ Tested to work on:
  * Windows Phone 8.1 emulator
 
 For more information on implementation, visit Lumia Developer's Library:
- http://dev.windows.com/en-us/featured/lumia
+http://go.microsoft.com/fwlink/?LinkId=528377
+
 
 
 Instructions
