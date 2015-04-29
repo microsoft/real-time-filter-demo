@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2012/deployment" AppPlatformVersion="8.0">
   <DefaultLanguage xmlns="" code="en-US" />
-  <App xmlns="" ProductID="{71061d7f-c8d1-42c0-822a-89c1296e0fba}" Title="Real-time Filter Demo" RuntimeType="Silverlight" Version="2.0.0.0" Genre="apps.normal" Author="Nokia" Description="A simple demo application demonstrating the use of Nokia Imaging SDK. Couple of effects provided by the SDK are applied to the viewfinder stream shown on the screen in real-time." Publisher="Nokia Developer" PublisherID="{56e91fe9-5e93-46f3-8561-bfcb079a7936}">
+  <App xmlns="" ProductID="{71061d7f-c8d1-42c0-822a-89c1296e0fba}" Title="Real-time Filter Demo" RuntimeType="Silverlight" Version="2.0.0.0" Genre="apps.normal" Author="Microsoft" Description="A simple demo application demonstrating the use of Lumia Imaging SDK. Couple of effects provided by the SDK are applied to the viewfinder stream shown on the screen in real-time." Publisher="Microsoft" PublisherID="{56e91fe9-5e93-46f3-8561-bfcb079a7936}">
     <IconPath IsRelative="true" IsResource="false">Assets\ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_ISV_CAMERA" />
